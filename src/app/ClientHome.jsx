@@ -21,6 +21,7 @@ export default function ClientHome({ farmers }) {
       }
       setUserCoords({ lat: data.lat, lng: data.lng });
       setError("");
+      localStorage.setItem("userZip", zip);
     } catch {
       setError("Failed to fetch location");
     }

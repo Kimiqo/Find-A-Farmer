@@ -9,23 +9,8 @@ export default function CartPage() {
   const { cart, removeFromCart } = useCart();
   const router = useRouter();
 
-  async function handleCheckout() {
-    try {
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cart, timestamp: new Date().toISOString() }),
-      });
-      if (response.ok) {
-        alert("Order placed!");
-        cart.forEach((item) => removeFromCart(item.id, item.farmerId));
-        router.push("/");
-      } else {
-        alert("Failed to place order");
-      }
-    } catch {
-      alert("Error submitting order");
-    }
+  function handleProceedToDelivery() {
+    router.push("/delivery");
   }
 
   return (
@@ -53,11 +38,13 @@ export default function CartPage() {
               </CardContent>
             </Card>
           ))}
-          <Button className="mt-4" onClick={handleCheckout}>
-            Place Order
+          <Button className="mt-4" onClick={handleProceedToDelivery}>
+            Proceed to Delivery
           </Button>
         </div>
       )}
     </main>
   );
 }
+
+// after that then we'll look at designing for better ux/ui experience (inlcuding breakpoints and everything, we need a landing page too, we need a number on the cart to show the number of items there)

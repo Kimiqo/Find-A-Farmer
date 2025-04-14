@@ -29,7 +29,13 @@ export default function RootLayout({ children }) {
             <Link href="/" className="mr-4">
               Home
             </Link>
-            <Link href="/cart">Cart</Link>
+            <Link href="/cart" className="mr-4">
+              Cart
+            </Link>
+            <Link href="/delivery" className="mr-4">
+              Delivery
+            </Link>
+            <Link href="/admin">Admin</Link>
           </nav>
           {children}
         </CartProvider>
