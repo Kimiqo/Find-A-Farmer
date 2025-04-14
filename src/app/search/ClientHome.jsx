@@ -45,23 +45,21 @@ export default function ClientHome({ farmers }) {
   }
 
   return (
-    <main className="p-4 sm:p-6 md:p-8 max-w-6xl mx-auto">
-      <h1 className="text-3xl md:text-4xl mb-6">Find Local Farmers</h1>
-      <div className="flex flex-col sm:flex-row gap-2 mb-6">
+    <main className="p-4 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">Find a Farmer</h1>
+      <div className="flex gap-2 mb-4">
         <Input
           placeholder="Enter ZIP code"
           value={zip}
           onChange={(e) => setZip(e.target.value)}
-          className="max-w-xs"
-          aria-label="ZIP code input"
         />
         <Button onClick={handleSearch}>Search</Button>
         <Button variant="outline" onClick={handleGeolocation}>
           Use My Location
         </Button>
       </div>
-      {error && <p className="text-red-500 mb-6">{error}</p>}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <div className="grid gap-4">
         {userCoords &&
           farmers.map((farmer) => (
             <FarmerCard

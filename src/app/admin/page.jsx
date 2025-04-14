@@ -12,7 +12,6 @@ export default function AdminLogin() {
   const router = useRouter();
 
   function handleLogin() {
-    // Hardcoded for demo
     if (username === "admin" && password === "password") {
       localStorage.setItem("isAdmin", "true");
       router.push("/admin/dashboard");
@@ -22,22 +21,29 @@ export default function AdminLogin() {
   }
 
   return (
-    <main className="p-4 max-w-md mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Admin Login</h1>
+    <main className="p-4 sm:p-6 md:p-8 max-w-md mx-auto">
+      <h1 className="text-3xl md:text-4xl mb-6">Admin Login</h1>
       <div className="space-y-4">
         <Input
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          aria-label="Username input"
         />
         <Input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          aria-label="Password input"
         />
         {error && <p className="text-red-500">{error}</p>}
-        <Button onClick={handleLogin}>Log In</Button>
+        <Button
+          className="bg-primary hover:bg-primary/90 text-white"
+          onClick={handleLogin}
+        >
+          Log In
+        </Button>
       </div>
     </main>
   );

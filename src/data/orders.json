@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "items": [
+      {
+        "id": 1,
+        "name": "Tomatoes",
+        "price": 3,
+        "stock": 50,
+        "farmerId": 1,
+        "quantity": 2
+      },
+      {
+        "id": 2,
+        "name": "Eggs",
+        "price": 5,
+        "stock": 30,
+        "farmerId": 1,
+        "quantity": 1
+      }
+    ],
+    "timestamp": "2025-04-14T16:02:45.388Z",
+    "delivery": {
+      "address": "Haatso",
+      "zip": "GT 125-8349",
+      "coords": {
+        "lat": 5.636031957680952,
+        "lng": -0.20166634821911747
+      }
+    },
+    "status": "fulfilled"
+  }
+]

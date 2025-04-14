@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/lib/CartContext";
-import Link from "next/link";
+import Nav from "@/components/Nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,18 +25,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CartProvider>
-        <nav className="p-4 bg-gray-100">
-            <Link href="/" className="mr-4">
-              Home
-            </Link>
-            <Link href="/cart" className="mr-4">
-              Cart
-            </Link>
-            <Link href="/delivery" className="mr-4">
-              Delivery
-            </Link>
-            <Link href="/admin">Admin</Link>
-          </nav>
+          <Nav />
           {children}
         </CartProvider>
       </body>

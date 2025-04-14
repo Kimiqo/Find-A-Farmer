@@ -14,31 +14,35 @@ export default function CartPage() {
   }
 
   return (
-    <main className="p-4 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Your Cart</h1>
+    <main className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto">
+      <h1 className="text-3xl md:text-4xl mb-6">Your Cart</h1>
       {cart.length === 0 ? (
-        <p>Your cart is empty</p>
+        <p className="text-gray-600">Your cart is empty</p>
       ) : (
         <div className="grid gap-4">
           {cart.map((item) => (
-            <Card key={`${item.farmerId}-${item.id}`}>
+            <Card key={`${item.farmerId}-${item.id}`} className="card">
               <CardHeader>
-                <CardTitle>{item.name}</CardTitle>
+                <CardTitle className="text-lg">{item.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p>Price: ${item.price.toFixed(2)}</p>
-                <p>Quantity: {item.quantity}</p>
+                <p className="text-sm">Price: ${item.price.toFixed(2)}</p>
+                <p className="text-sm">Quantity: {item.quantity}</p>
                 <Button
                   variant="destructive"
-                  className="mt-2"
+                  className="mt-4"
                   onClick={() => removeFromCart(item.id, item.farmerId)}
+                  aria-label={`Remove ${item.name} from cart`}
                 >
                   Remove
                 </Button>
               </CardContent>
             </Card>
           ))}
-          <Button className="mt-4" onClick={handleProceedToDelivery}>
+          <Button
+            className="mt-6 bg-primary hover:bg-primary/90 text-white"
+            onClick={handleProceedToDelivery}
+          >
             Proceed to Delivery
           </Button>
         </div>
@@ -46,5 +50,3 @@ export default function CartPage() {
     </main>
   );
 }
-
-// after that then we'll look at designing for better ux/ui experience (inlcuding breakpoints and everything, we need a landing page too, we need a number on the cart to show the number of items there)
