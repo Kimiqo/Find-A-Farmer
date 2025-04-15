@@ -78,7 +78,7 @@ export default function AdminDashboard() {
     <main className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto">
       <h1 className="text-3xl md:text-4xl mb-6">Admin Dashboard</h1>
       <Button
-        className="mb-6 bg-primary hover:bg-primary/90 text-white"
+        className="mb-6 bg-primary hover:bg-primary/90 text-primary-foreground"
         onClick={() => {
           localStorage.removeItem("isAdmin");
           router.push("/admin");
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
           id="farmer-select"
           value={farmerId}
           onChange={(e) => setFarmerId(e.target.value)}
-          className="border p-2 rounded w-full max-w-xs focus:ring-2 focus:ring-primary"
+          className="border border-input p-2 rounded w-full max-w-xs focus:ring-2 focus:ring-primary"
           aria-label="Select farmer"
         >
           {farmers.map((f) => (
@@ -136,7 +136,7 @@ export default function AdminDashboard() {
           min="0"
         />
         <Button
-          className="bg-primary hover:bg-primary/90 text-white"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground"
           onClick={handleAddProduct}
           aria-label="Add product"
         >
@@ -153,8 +153,8 @@ export default function AdminDashboard() {
                 <CardTitle className="text-lg">{product.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-gray-600">Price: ${product.price.toFixed(2)}</p>
-                <p className="text-sm text-gray-600">Stock: {product.stock}</p>
+                <p className="text-sm text-muted-foreground">Price: ${product.price.toFixed(2)}</p>
+                <p className="text-sm text-muted-foreground">Stock: {product.stock}</p>
                 <Button
                   variant="destructive"
                   className="mt-4"
@@ -167,7 +167,7 @@ export default function AdminDashboard() {
             </Card>
           ))
         ) : (
-          <p className="text-gray-600">No products available.</p>
+          <p className="text-muted-foreground">No products available.</p>
         )}
       </div>
 
@@ -190,16 +190,16 @@ export default function AdminDashboard() {
                     {order.items
                       .filter((item) => item.farmerId === parseInt(farmerId))
                       .map((item, index) => (
-                        <li key={index} className="text-sm text-gray-600">
+                        <li key={index} className="text-sm text-muted-foreground">
                           {item.name} - ${item.price.toFixed(2)} x {item.quantity}
                         </li>
                       ))}
                   </ul>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     Status: {order.status || "Pending"}
                   </p>
                   <Button
-                    className="mt-4 bg-primary hover:bg-primary/90 text-white"
+                    className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground"
                     onClick={() => handleFulfillOrder(order.timestamp)}
                     disabled={order.status === "fulfilled"}
                     aria-label={`Mark order from ${order.timestamp} as fulfilled`}
@@ -210,7 +210,7 @@ export default function AdminDashboard() {
               </Card>
             ))
         ) : (
-          <p className="text-gray-600">No orders for this farmer.</p>
+          <p className="text-muted-foreground">No orders for this farmer.</p>
         )}
       </div>
     </main>

@@ -28,5 +28,43 @@
       }
     },
     "status": "fulfilled"
+  },
+  {
+    "items": [
+      {
+        "id": 1744661663172,
+        "name": "Cabbage",
+        "price": 2,
+        "stock": 30,
+        "farmerId": 1,
+        "quantity": 1
+      },
+      {
+        "id": 1,
+        "name": "Tomatoes",
+        "price": 3,
+        "stock": 50,
+        "farmerId": 1,
+        "quantity": 1
+      },
+      {
+        "id": 2,
+        "name": "Eggs",
+        "price": 5,
+        "stock": 30,
+        "farmerId": 1,
+        "quantity": 2
+      }
+    ],
+    "timestamp": "2025-04-14T20:15:06.372Z",
+    "delivery": {
+      "address": "haatso",
+      "zip": "345ert",
+      "coords": {
+        "lat": 5.666715045031923,
+        "lng": -0.21282017175595183
+      }
+    },
+    "status": "fulfilled"
   }
 ]

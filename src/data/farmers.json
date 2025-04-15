@@ -26,6 +26,12 @@
         "name": "Carrots",
         "price": 4,
         "stock": 20
+      },
+      {
+        "id": 1744661663172,
+        "name": "Cabbage",
+        "price": 2,
+        "stock": 30
       }
     ]
   },
