@@ -32,6 +32,12 @@
         "name": "Cabbage",
         "price": 2,
         "stock": 30
+      },
+      {
+        "id": 1744730779771,
+        "name": "Beetroot",
+        "price": 5,
+        "stock": 12
       }
     ]
   },

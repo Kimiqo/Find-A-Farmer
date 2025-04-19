@@ -66,5 +66,51 @@
       }
     },
     "status": "fulfilled"
+  },
+  {
+    "items": [
+      {
+        "id": 1744730779771,
+        "name": "Beetroot",
+        "price": 5,
+        "stock": 12,
+        "farmerId": 1,
+        "quantity": 1
+      },
+      {
+        "id": 1744661663172,
+        "name": "Cabbage",
+        "price": 2,
+        "stock": 30,
+        "farmerId": 1,
+        "quantity": 1
+      },
+      {
+        "id": 1,
+        "name": "Tomatoes",
+        "price": 3,
+        "stock": 50,
+        "farmerId": 1,
+        "quantity": 2
+      },
+      {
+        "id": 1744645251114,
+        "name": "Carrots",
+        "price": 4,
+        "stock": 20,
+        "farmerId": 1,
+        "quantity": 1
+      }
+    ],
+    "timestamp": "2025-04-15T15:26:40.372Z",
+    "delivery": {
+      "address": "adfadf",
+      "zip": "adfadfs",
+      "coords": {
+        "lat": 5.634905385533551,
+        "lng": -0.20133431062149332
+      }
+    },
+    "status": "fulfilled"
   }
 ]
