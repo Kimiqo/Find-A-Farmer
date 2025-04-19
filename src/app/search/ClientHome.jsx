@@ -11,42 +11,38 @@ import "mapbox-gl/dist/mapbox-gl.css";
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 export default function ClientHome({ farmers }) {
-  const [zip, setZip] = useState("");
+  const [location, setLocation] = useState("");
   const [userCoords, setUserCoords] = useState(null);
   const [error, setError] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
   const mapContainer = useRef(null);
   const map = useRef(null);
 
-  // Initialize map when component mounts
+  // Initialize map
   useEffect(() => {
     if (!mapContainer.current) return;
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v12",
-      center: [-0.2, 5.6], // Accra center
+      center: [-0.2, 5.6], // Accra
       zoom: 10,
     });
-
-    // Add navigation control (zoom buttons)
     map.current.addControl(new mapboxgl.NavigationControl());
 
     return () => map.current.remove();
   }, []);
 
-  // Update map markers when userCoords or farmers change
+  // Update markers
   useEffect(() => {
     if (!map.current || !userCoords) return;
 
-    // Center map on user location
     map.current.setCenter([userCoords.lng, userCoords.lat]);
     map.current.setZoom(12);
 
-    // Clear existing markers
     const markers = document.querySelectorAll(".mapboxgl-marker");
     markers.forEach((marker) => marker.remove());
 
-    // Add farmer markers within 10 km
     farmers.forEach((farmer) => {
       const distance = getDistance(
         userCoords.lat,
@@ -55,7 +51,6 @@ export default function ClientHome({ farmers }) {
         farmer.location.lng
       );
       if (distance <= 10) {
-        // 10 km radius
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
           <div class="p-2">
             <h3 class="text-lg font-bold text-secondary">${farmer.name}</h3>
@@ -64,8 +59,7 @@ export default function ClientHome({ farmers }) {
             <a href="/farmers/${farmer.id}" class="text-primary hover:underline">View Farm</a>
           </div>
         `);
-
-        new mapboxgl.Marker({ color: "#2f855a" }) // Green marker
+        new mapboxgl.Marker({ color: "#2f855a" })
           .setLngLat([farmer.location.lng, farmer.location.lat])
           .setPopup(popup)
           .addTo(map.current);
@@ -73,25 +67,54 @@ export default function ClientHome({ farmers }) {
     });
   }, [userCoords, farmers]);
 
+  // Autocomplete for location search
+  async function fetchSuggestions(query) {
+    if (!query) {
+      setSuggestions([]);
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          query
+        )}.json?access_token=${mapboxgl.accessToken}&bbox=-0.4,5.4,0.0,5.8&limit=5`
+      );
+      const data = await res.json();
+      setSuggestions(data.features.map((f) => ({
+        name: f.place_name,
+        coords: f.center, // [lng, lat]
+      })));
+    } catch {
+      setSuggestions([]);
+    }
+  }
+
   async function handleSearch() {
     try {
-      // Mock geocoding for Accra ZIPs (replace with Mapbox Geocoding API)
-      const zipCoords = {
-        "00233": { lat: 5.5536, lng: -0.1830 }, // Osu
-        "00234": { lat: 5.6508, lng: -0.1867 }, // Legon
-        "00235": { lat: 5.6767, lng: -0.1665 }, // Madina
-      };
-      const coords = zipCoords[zip];
-      if (!coords) {
-        setError("Invalid ZIP code for Accra");
+      const res = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          location
+        )}.json?access_token=${mapboxgl.accessToken}&bbox=-0.4,5.4,0.0,5.8`
+      );
+      const data = await res.json();
+      if (!data.features.length) {
+        setError("Location not found in Accra");
         return;
       }
-      setUserCoords(coords);
+      const [lng, lat] = data.features[0].center;
+      setUserCoords({ lat, lng });
       setError("");
-      localStorage.setItem("userZip", zip);
+      setSuggestions([]);
     } catch {
       setError("Failed to fetch location");
     }
+  }
+
+  function handleSelectSuggestion(suggestion) {
+    setLocation(suggestion.name);
+    setUserCoords({ lat: suggestion.coords[1], lng: suggestion.coords[0] });
+    setSuggestions([]);
+    setError("");
   }
 
   async function handleGeolocation() {
@@ -103,6 +126,7 @@ export default function ClientHome({ farmers }) {
             lng: position.coords.longitude,
           });
           setError("");
+          setSuggestions([]);
         },
         () => setError("Geolocation failed")
       );
@@ -114,15 +138,36 @@ export default function ClientHome({ farmers }) {
   return (
     <main className="p-4 sm:p-6 md:p-8 max-w-6xl mx-auto">
       <h1 className="text-3xl md:text-4xl mb-6">Find Local Farmers in Accra</h1>
-      <div className="flex flex-col sm:flex-row gap-2 mb-6">
-        <Input
-          placeholder="Enter Accra ZIP code (e.g., 00233)"
-          value={zip}
-          onChange={(e) => setZip(e.target.value)}
-          className="max-w-xs focus:ring-2 focus:ring-primary"
-          aria-label="ZIP code input"
-        />
-        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" onClick={handleSearch}>
+      <div className="relative flex flex-col sm:flex-row gap-2 mb-6">
+        <div className="relative flex-1 max-w-xs">
+          <Input
+            placeholder="Enter location (e.g., Osu, Madina)"
+            value={location}
+            onChange={(e) => {
+              setLocation(e.target.value);
+              fetchSuggestions(e.target.value);
+            }}
+            className="focus:ring-2 focus:ring-primary"
+            aria-label="Location search"
+          />
+          {suggestions.length > 0 && (
+            <ul className="absolute z-10 w-full bg-card shadow-lg rounded-b-lg mt-1 max-h-60 overflow-auto">
+              {suggestions.map((s, i) => (
+                <li
+                  key={i}
+                  className="p-2 text-sm text-foreground hover:bg-muted cursor-pointer"
+                  onClick={() => handleSelectSuggestion(s)}
+                >
+                  {s.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <Button
+          className="bg-primary hover:bg-primary/90 text-primary-foreground"
+          onClick={handleSearch}
+        >
           Search
         </Button>
         <Button

@@ -5,10 +5,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { useCart } from "@/lib/CartContext";
 
-// Map farmer IDs to banner images
 const farmerBanners = {
   1: "/images/farmer-1.jpg",
   2: "/images/farmer-2.jpg",
+  3: "/images/farmer-3.jpg",
+  4: "/images/farmer-4.jpg",
+  5: "/images/farmer-5.jpg",
+  6: "/images/farmer-6.jpg",
+  7: "/images/farmer-7.jpg",
+  8: "/images/farmer-8.jpg",
+  9: "/images/farmer-9.jpg",
+  10: "/images/farmer-10.jpg",
+  11: "/images/farmer-11.jpg",
+  12: "/images/farmer-12.jpg",
+  13: "/images/farmer-13.jpg",
+  14: "/images/farmer-14.jpg",
+  15: "/images/farmer-15.jpg",
+  16: "/images/farmer-16.jpg",
+  17: "/images/farmer-17.jpg",
+  18: "/images/farmer-18.jpg",
+  19: "/images/farmer-19.jpg",
+  20: "/images/farmer-20.jpg",
+  21: "/images/farmer-21.jpg",
+  22: "/images/farmer-22.jpg",
+  23: "/images/farmer-23.jpg",
 };
 
 export default function ClientFarmerPage({ farmer }) {
@@ -44,7 +64,7 @@ export default function ClientFarmerPage({ farmer }) {
                 <CardTitle className="text-lg">{product.name}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Price: ${product.price.toFixed(2)}</p>
+                <p className="text-sm text-muted-foreground">Price: GHS {product.price.toFixed(2)}</p>
                 <p className="text-sm text-muted-foreground">Stock: {product.stock}</p>
                 <Button
                   className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground"

@@ -10,25 +10,25 @@ import { getDistance } from "@/lib/utils";
 export default function ClientDeliveryPage({ farmers }) {
   const { cart, clearCart } = useCart();
   const [address, setAddress] = useState("");
-  const [zip, setZip] = useState("");
+  const [location, setLocation] = useState("");
   const [userCoords, setUserCoords] = useState(null);
   const [error, setError] = useState("");
   const router = useRouter();
 
   async function handleGeocode() {
     try {
-      // Mock geocoding (replace with Mapbox Geocoding API)
-      const zipCoords = {
-        "00233": { lat: 5.5536, lng: -0.1830 }, // Osu
-        "00234": { lat: 5.6508, lng: -0.1867 }, // Legon
-        "00235": { lat: 5.6767, lng: -0.1665 }, // Madina
-      };
-      const coords = zipCoords[zip];
-      if (!coords) {
-        setError("Invalid ZIP code for Accra");
+      const res = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          location
+        )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&bbox=-0.4,5.4,0.0,5.8`
+      );
+      const data = await res.json();
+      if (!data.features.length) {
+        setError("Location not found in Accra");
         return;
       }
-      setUserCoords(coords);
+      const [lng, lat] = data.features[0].center;
+      setUserCoords({ lat, lng });
       setError("");
     } catch {
       setError("Failed to fetch location");
@@ -36,8 +36,8 @@ export default function ClientDeliveryPage({ farmers }) {
   }
 
   async function handleOrder() {
-    if (!address || !zip || !userCoords) {
-      setError("Please enter address and valid ZIP code");
+    if (!address || !location || !userCoords) {
+      setError("Please enter address and valid location");
       return;
     }
 
@@ -45,7 +45,7 @@ export default function ClientDeliveryPage({ farmers }) {
       timestamp: Date.now(),
       items: cart,
       address,
-      zip,
+      location,
       status: "pending",
       deliveryTimes: cart.map((item) => {
         const farmer = farmers.find((f) => f.id === item.farmerId);
@@ -56,7 +56,6 @@ export default function ClientDeliveryPage({ farmers }) {
           farmer.location.lat,
           farmer.location.lng
         );
-        // Delivery time: distance / 30 km/h + 5 min prep
         const timeMin = Math.round((distance / 30) * 60 + 5);
         return { itemId: item.id, farmerId: item.farmerId, time: `${timeMin} min` };
       }),
@@ -100,17 +99,17 @@ export default function ClientDeliveryPage({ farmers }) {
         />
         <div className="flex flex-col sm:flex-row gap-2">
           <Input
-            placeholder="Accra ZIP (e.g., 00233)"
-            value={zip}
-            onChange={(e) => setZip(e.target.value)}
+            placeholder="Location (e.g., Osu, Madina)"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
             className="max-w-xs focus:ring-2 focus:ring-primary"
-            aria-label="ZIP code"
+            aria-label="Location"
           />
           <Button
             className="bg-primary hover:bg-primary/90 text-primary-foreground"
             onClick={handleGeocode}
           >
-            Verify ZIP
+            Verify Location
           </Button>
         </div>
       </div>
