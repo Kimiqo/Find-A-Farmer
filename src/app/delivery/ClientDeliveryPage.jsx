@@ -1,179 +1,150 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/lib/CartContext";
 import { useRouter } from "next/navigation";
 import { getDistance } from "@/lib/utils";
 
 export default function ClientDeliveryPage({ farmers }) {
-  const { cart, removeFromCart } = useCart();
+  const { cart, clearCart } = useCart();
+  const [address, setAddress] = useState("");
   const [zip, setZip] = useState("");
   const [userCoords, setUserCoords] = useState(null);
   const [error, setError] = useState("");
-  const [address, setAddress] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
-    const savedZip = localStorage.getItem("userZip");
-    if (savedZip) {
-      setZip(savedZip);
-      handleSearch(savedZip);
-    }
-  }, []);
-
-  async function handleSearch(zipCode) {
+  async function handleGeocode() {
     try {
-      const response = await fetch(`/api/geocode?zip=${zipCode}`);
-      const data = await response.json();
-      if (data.error) {
-        setError(data.error);
+      // Mock geocoding (replace with Mapbox Geocoding API)
+      const zipCoords = {
+        "00233": { lat: 5.5536, lng: -0.1830 }, // Osu
+        "00234": { lat: 5.6508, lng: -0.1867 }, // Legon
+        "00235": { lat: 5.6767, lng: -0.1665 }, // Madina
+      };
+      const coords = zipCoords[zip];
+      if (!coords) {
+        setError("Invalid ZIP code for Accra");
         return;
       }
-      setUserCoords({ lat: data.lat, lng: data.lng });
+      setUserCoords(coords);
       setError("");
-      localStorage.setItem("userZip", zipCode);
     } catch {
       setError("Failed to fetch location");
     }
   }
 
-  async function handleGeolocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserCoords({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-          setError("");
-        },
-        () => setError("Geolocation failed")
-      );
-    } else {
-      setError("Geolocation not supported");
-    }
-  }
-
-  function calculateTotal() {
-    return cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
-  }
-
-  function estimateDeliveryTime(farmerId) {
-    if (!userCoords) return "N/A";
-    const farmer = farmers.find((f) => f.id === parseInt(farmerId));
-    if (!farmer) return "N/A";
-
-    const distance = getDistance(
-      userCoords.lat,
-      userCoords.lng,
-      farmer.location.lat,
-      farmer.location.lng
-    );
-
-    const minutes = Math.round(30 + distance);
-    return `${minutes} minutes`;
-  }
-
-  async function handleSubmitOrder() {
-    if (!userCoords || !address) {
-      alert("Please provide a valid ZIP code and address");
+  async function handleOrder() {
+    if (!address || !zip || !userCoords) {
+      setError("Please enter address and valid ZIP code");
       return;
     }
 
-    try {
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: cart,
-          timestamp: new Date().toISOString(),
-          delivery: { address, zip, coords: userCoords },
-        }),
-      });
-      if (response.ok) {
-        alert("Order placed!");
-        cart.forEach((item) => removeFromCart(item.id, item.farmerId));
-        router.push("/");
-      } else {
-        alert("Failed to place order");
-      }
-    } catch {
-      alert("Error submitting order");
-    }
+    const order = {
+      timestamp: Date.now(),
+      items: cart,
+      address,
+      zip,
+      status: "pending",
+      deliveryTimes: cart.map((item) => {
+        const farmer = farmers.find((f) => f.id === item.farmerId);
+        if (!farmer) return { itemId: item.id, time: "Unknown" };
+        const distance = getDistance(
+          userCoords.lat,
+          userCoords.lng,
+          farmer.location.lat,
+          farmer.location.lng
+        );
+        // Delivery time: distance / 30 km/h + 5 min prep
+        const timeMin = Math.round((distance / 30) * 60 + 5);
+        return { itemId: item.id, farmerId: item.farmerId, time: `${timeMin} min` };
+      }),
+    };
+
+    await fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(order),
+    });
+
+    clearCart();
+    router.push("/thank-you");
   }
 
   return (
     <main className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto">
       <h1 className="text-3xl md:text-4xl mb-6">Delivery Details</h1>
       <div className="mb-6">
-        <h2 className="text-2xl md:text-3xl mb-4">Your Location</h2>
-        <div className="flex flex-col sm:flex-row gap-2 mb-4">
-          <Input
-            placeholder="Enter ZIP code"
-            value={zip}
-            onChange={(e) => setZip(e.target.value)}
-            className="max-w-xs"
-            aria-label="ZIP code input"
-          />
-          <Button onClick={() => handleSearch(zip)}>Update</Button>
-          <Button variant="outline" onClick={handleGeolocation}>
-            Use My Location
-          </Button>
-        </div>
+        <h2 className="text-2xl mb-4">Cart</h2>
+        {cart.length ? (
+          <ul className="list-disc pl-5 mb-4">
+            {cart.map((item) => (
+              <li key={item.id} className="text-sm text-muted-foreground">
+                {item.name} - GHS {item.price.toFixed(2)} x {item.quantity}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-muted-foreground">Your cart is empty.</p>
+        )}
+      </div>
+      <div className="mb-6">
+        <h2 className="text-2xl mb-4">Delivery Address</h2>
         <Input
-          placeholder="Delivery Address"
+          placeholder="Street Address"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          className="max-w-md"
-          aria-label="Delivery address input"
+          className="mb-4 focus:ring-2 focus:ring-primary"
+          aria-label="Street address"
         />
-        {error && <p className="text-red-500 mt-2">{error}</p>}
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Input
+            placeholder="Accra ZIP (e.g., 00233)"
+            value={zip}
+            onChange={(e) => setZip(e.target.value)}
+            className="max-w-xs focus:ring-2 focus:ring-primary"
+            aria-label="ZIP code"
+          />
+          <Button
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            onClick={handleGeocode}
+          >
+            Verify ZIP
+          </Button>
+        </div>
       </div>
-
-      <h2 className="text-2xl md:text-3xl mb-4">Order Summary</h2>
-      {cart.length === 0 ? (
-        <p className="text-gray-600">Your cart is empty</p>
-      ) : (
-        <div className="grid gap-4">
-          {cart.map((item) => (
-            <Card key={`${item.farmerId}-${item.id}`} className="card">
-              <CardHeader>
-                <CardTitle className="text-lg">{item.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm">Price: ${item.price.toFixed(2)}</p>
-                <p className="text-sm">Quantity: {item.quantity}</p>
-                <p className="text-sm">Estimated Delivery: {estimateDeliveryTime(item.farmerId)}</p>
-                <Button
-                  variant="destructive"
-                  className="mt-4"
-                  onClick={() => removeFromCart(item.id, item.farmerId)}
-                  aria-label={`Remove ${item.name} from cart`}
-                >
-                  Remove
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-          <Card className="card">
-            <CardHeader>
-              <CardTitle className="text-lg">Total</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm">Total Price: ${calculateTotal()}</p>
-              <Button
-                className="mt-4 bg-primary hover:bg-primary/90 text-white"
-                onClick={handleSubmitOrder}
-              >
-                Confirm Order
-              </Button>
-            </CardContent>
-          </Card>
+      {userCoords && (
+        <div className="mb-6">
+          <h2 className="text-2xl mb-4">Estimated Delivery Times</h2>
+          <ul className="list-disc pl-5">
+            {cart.map((item) => {
+              const farmer = farmers.find((f) => f.id === item.farmerId);
+              if (!farmer) return null;
+              const distance = getDistance(
+                userCoords.lat,
+                userCoords.lng,
+                farmer.location.lat,
+                farmer.location.lng
+              );
+              const timeMin = Math.round((distance / 30) * 60 + 5);
+              return (
+                <li key={item.id} className="text-sm text-muted-foreground">
+                  {item.name} from {farmer.name}: ~{timeMin} min
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
+      {error && <p className="text-destructive mb-6">{error}</p>}
+      <Button
+        className="bg-primary hover:bg-primary/90 text-primary-foreground"
+        onClick={handleOrder}
+        disabled={!cart.length}
+      >
+        Place Order
+      </Button>
     </main>
   );
 }

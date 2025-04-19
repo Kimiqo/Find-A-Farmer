@@ -1,62 +1,41 @@
 [
   {
     "id": 1,
-    "name": "Green Valley Farm",
+    "name": "Osu Fresh Farms",
     "location": {
-      "address": "123 Rural Rd, Springfield",
-      "lat": 39.9259,
-      "lng": -83.8085,
-      "zip": "45501"
+      "lat": 5.5536,
+      "lng": -0.1830,
+      "address": "Oxford St, Osu, Accra"
     },
     "products": [
-      {
-        "id": 1,
-        "name": "Tomatoes",
-        "price": 3,
-        "stock": 50
-      },
-      {
-        "id": 2,
-        "name": "Eggs",
-        "price": 5,
-        "stock": 30
-      },
-      {
-        "id": 1744645251114,
-        "name": "Carrots",
-        "price": 4,
-        "stock": 20
-      },
-      {
-        "id": 1744661663172,
-        "name": "Cabbage",
-        "price": 2,
-        "stock": 30
-      },
-      {
-        "id": 1744730779771,
-        "name": "Beetroot",
-        "price": 5,
-        "stock": 12
-      }
+      { "id": 1, "name": "Tomatoes", "price": 10, "stock": 50 },
+      { "id": 2, "name": "Okra", "price": 8, "stock": 30 }
     ]
   },
   {
     "id": 2,
-    "name": "Sunny Acres",
+    "name": "Legon Green Fields",
     "location": {
-      "address": "456 Farm Ln, Dayton",
-      "lat": 39.7589,
-      "lng": -84.1916,
-      "zip": "45401"
+      "lat": 5.6508,
+      "lng": -0.1867,
+      "address": "University Rd, Legon, Accra"
     },
     "products": [
-      {
-        "id": 1,
-        "name": "Apples",
-        "price": 4,
-        "stock": 40
-      }
+      { "id": 3, "name": "Yams", "price": 15, "stock": 20 },
+      { "id": 4, "name": "Peppers", "price": 6, "stock": 40 }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Madina Market Growers",
+    "location": {
+      "lat": 5.6767,
+      "lng": -0.1665,
+      "address": "Madina Market, Accra"
+    },
+    "products": [
+      { "id": 5, "name": "Cassava", "price": 12, "stock": 25 },
+      { "id": 6, "name": "Plantains", "price": 9, "stock": 15 }
     ]
   }
 ]

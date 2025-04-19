@@ -2,14 +2,14 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 
-// Map farmer IDs to local images
 const farmerImages = {
   1: "/images/farmer-1.jpg",
   2: "/images/farmer-2.jpg",
+  3: "/images/farmer-3.jpg",
 };
 
 export default function FarmerCard({ farmer, distance }) {
-  const imageSrc = farmerImages[farmer.id] || "/images/farm-hero.jpg"; // Fallback
+  const imageSrc = farmerImages[farmer.id] || "/images/farm-hero.jpg";
 
   return (
     <Link href={`/farmers/${farmer.id}`}>
@@ -26,7 +26,7 @@ export default function FarmerCard({ farmer, distance }) {
         </CardHeader>
         <CardContent className="pt-4">
           <CardTitle className="text-xl">{farmer.name}</CardTitle>
-          <p className="text-sm text-muted-foreground">{distance.toFixed(2)} miles away</p>
+          <p className="text-sm text-muted-foreground">{distance.toFixed(2)} km away</p>
           <p className="text-sm text-muted-foreground">{farmer.location.address}</p>
         </CardContent>
       </Card>
