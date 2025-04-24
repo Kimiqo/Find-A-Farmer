@@ -48,6 +48,9 @@ export default function FarmerCard({ farmer, distance }) {
           <CardTitle className="text-xl">{farmer.name}</CardTitle>
           <p className="text-sm text-muted-foreground">{distance.toFixed(2)} km away</p>
           <p className="text-sm text-muted-foreground">{farmer.location.address}</p>
+          <p className="text-sm text-muted-foreground">
+            Products from GHS {Math.min(...farmer.products.map(p => p.price)).toFixed(2)}
+          </p>
         </CardContent>
       </Card>
     </Link>

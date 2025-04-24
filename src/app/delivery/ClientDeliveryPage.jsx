@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/lib/CartContext";
@@ -10,65 +10,73 @@ import { getDistance } from "@/lib/utils";
 export default function ClientDeliveryPage({ farmers }) {
   const { cart, clearCart } = useCart();
   const [address, setAddress] = useState("");
-  const [location, setLocation] = useState("");
   const [userCoords, setUserCoords] = useState(null);
   const [error, setError] = useState("");
   const router = useRouter();
 
-  async function handleGeocode() {
-    try {
-      const res = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          location
-        )}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}&bbox=-0.4,5.4,0.0,5.8`
+  // Get current location on mount
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
+          setUserCoords(coords);
+          localStorage.setItem("userLocation", JSON.stringify({ name: "Current Location", coords }));
+          setError("");
+        },
+        () => {
+          setError("Geolocation failed. Using Accra center.");
+          setUserCoords({ lat: 5.6, lng: -0.2 }); // Accra fallback
+        }
       );
-      const data = await res.json();
-      if (!data.features.length) {
-        setError("Location not found in Accra");
-        return;
-      }
-      const [lng, lat] = data.features[0].center;
-      setUserCoords({ lat, lng });
-      setError("");
-    } catch {
-      setError("Failed to fetch location");
+    } else {
+      setError("Geolocation not supported. Using Accra center.");
+      setUserCoords({ lat: 5.6, lng: -0.2 });
     }
-  }
+  }, []);
 
   async function handleOrder() {
-    if (!address || !location || !userCoords) {
-      setError("Please enter address and valid location");
+    if (!address || !userCoords) {
+      setError("Please enter a street address.");
       return;
     }
 
-    const order = {
-      timestamp: Date.now(),
-      items: cart,
-      address,
-      location,
-      status: "pending",
-      deliveryTimes: cart.map((item) => {
-        const farmer = farmers.find((f) => f.id === item.farmerId);
-        if (!farmer) return { itemId: item.id, time: "Unknown" };
-        const distance = getDistance(
-          userCoords.lat,
-          userCoords.lng,
-          farmer.location.lat,
-          farmer.location.lng
-        );
-        const timeMin = Math.round((distance / 30) * 60 + 5);
-        return { itemId: item.id, farmerId: item.farmerId, time: `${timeMin} min` };
-      }),
-    };
+    try {
+      const order = {
+        timestamp: Date.now(),
+        items: cart,
+        address,
+        location: userCoords.lat === 5.6 && userCoords.lng === -0.2 ? "Accra Center (Fallback)" : "Current Location",
+        status: "pending",
+        deliveryTimes: cart.map((item) => {
+          const farmer = farmers.find((f) => f.id === item.farmerId);
+          if (!farmer) return { itemId: item.id, time: "Unknown" };
+          const distance = getDistance(
+            userCoords.lat,
+            userCoords.lng,
+            farmer.location.lat,
+            farmer.location.lng
+          );
+          const timeMin = Math.round((distance / 30) * 60 + 5);
+          return { itemId: item.id, farmerId: item.farmerId, time: `${timeMin} min` };
+        }),
+      };
 
-    await fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(order),
-    });
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(order),
+      });
 
-    clearCart();
-    router.push("/thank-you");
+      if (!res.ok) {
+        throw new Error("Failed to place order");
+      }
+
+      clearCart();
+      router.push("/thank-you");
+    } catch (err) {
+      setError("Failed to place order. Please try again.");
+    }
   }
 
   return (
@@ -97,21 +105,11 @@ export default function ClientDeliveryPage({ farmers }) {
           className="mb-4 focus:ring-2 focus:ring-primary"
           aria-label="Street address"
         />
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Input
-            placeholder="Location (e.g., Osu, Madina)"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="max-w-xs focus:ring-2 focus:ring-primary"
-            aria-label="Location"
-          />
-          <Button
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            onClick={handleGeocode}
-          >
-            Verify Location
-          </Button>
-        </div>
+        <p className="text-sm text-muted-foreground">
+          {userCoords?.lat === 5.6 && userCoords?.lng === -0.2
+            ? "Using Accra center (enable location services for precise delivery)."
+            : "Using your current location for delivery."}
+        </p>
       </div>
       {userCoords && (
         <div className="mb-6">
@@ -140,7 +138,7 @@ export default function ClientDeliveryPage({ farmers }) {
       <Button
         className="bg-primary hover:bg-primary/90 text-primary-foreground"
         onClick={handleOrder}
-        disabled={!cart.length}
+        disabled={!cart.length || !address || !userCoords}
       >
         Place Order
       </Button>

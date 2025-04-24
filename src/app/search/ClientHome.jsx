@@ -17,8 +17,8 @@ export default function ClientHome({ farmers }) {
   const [suggestions, setSuggestions] = useState([]);
   const mapContainer = useRef(null);
   const map = useRef(null);
+  const userMarker = useRef(null);
 
-  // Initialize map
   useEffect(() => {
     if (!mapContainer.current) return;
 
@@ -33,16 +33,26 @@ export default function ClientHome({ farmers }) {
     return () => map.current.remove();
   }, []);
 
-  // Update markers
   useEffect(() => {
     if (!map.current || !userCoords) return;
 
     map.current.setCenter([userCoords.lng, userCoords.lat]);
-    map.current.setZoom(12);
+    map.current.setZoom(13);
 
+    // Clear existing markers
     const markers = document.querySelectorAll(".mapboxgl-marker");
     markers.forEach((marker) => marker.remove());
+    if (userMarker.current) {
+      userMarker.current.remove();
+    }
 
+    // Add user marker (black)
+    userMarker.current = new mapboxgl.Marker({ color: "#000000" })
+      .setLngLat([userCoords.lng, userCoords.lat])
+      .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`<div class="p-2"><h3 class="text-lg font-bold">Your Location</h3></div>`))
+      .addTo(map.current);
+
+    // Add farmer markers (green)
     farmers.forEach((farmer) => {
       const distance = getDistance(
         userCoords.lat,
@@ -50,13 +60,13 @@ export default function ClientHome({ farmers }) {
         farmer.location.lat,
         farmer.location.lng
       );
-      if (distance <= 10) {
+      if (distance <= 3) {
         const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
           <div class="p-2">
             <h3 class="text-lg font-bold text-secondary">${farmer.name}</h3>
-            <p class="text-sm text-muted-foreground">${distance.toFixed(2)} km away</p>
-            <p class="text-sm text-muted-foreground">${farmer.location.address}</p>
-            <a href="/farmers/${farmer.id}" class="text-primary hover:underline">View Farm</a>
+            <p className="text-sm text-muted-foreground">${distance.toFixed(2)} km away</p>
+            <p className="text-sm text-muted-foreground">${farmer.location.address}</p>
+            <a href="/farmers/${farmer.id}" className="text-primary hover:underline">View Farm</a>
           </div>
         `);
         new mapboxgl.Marker({ color: "#2f855a" })
@@ -67,7 +77,6 @@ export default function ClientHome({ farmers }) {
     });
   }, [userCoords, farmers]);
 
-  // Autocomplete for location search
   async function fetchSuggestions(query) {
     if (!query) {
       setSuggestions([]);
@@ -82,7 +91,7 @@ export default function ClientHome({ farmers }) {
       const data = await res.json();
       setSuggestions(data.features.map((f) => ({
         name: f.place_name,
-        coords: f.center, // [lng, lat]
+        coords: f.center,
       })));
     } catch {
       setSuggestions([]);
@@ -103,6 +112,7 @@ export default function ClientHome({ farmers }) {
       }
       const [lng, lat] = data.features[0].center;
       setUserCoords({ lat, lng });
+      localStorage.setItem("userLocation", JSON.stringify({ name: location, coords: { lat, lng } }));
       setError("");
       setSuggestions([]);
     } catch {
@@ -113,6 +123,10 @@ export default function ClientHome({ farmers }) {
   function handleSelectSuggestion(suggestion) {
     setLocation(suggestion.name);
     setUserCoords({ lat: suggestion.coords[1], lng: suggestion.coords[0] });
+    localStorage.setItem("userLocation", JSON.stringify({
+      name: suggestion.name,
+      coords: { lat: suggestion.coords[1], lng: suggestion.coords[0] },
+    }));
     setSuggestions([]);
     setError("");
   }
@@ -121,17 +135,20 @@ export default function ClientHome({ farmers }) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserCoords({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
+          const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
+          setUserCoords(coords);
+          localStorage.setItem("userLocation", JSON.stringify({ name: "Current Location", coords }));
           setError("");
           setSuggestions([]);
         },
-        () => setError("Geolocation failed")
+        () => {
+          setError("Geolocation failed. Using Accra center.");
+          setUserCoords({ lat: 5.6, lng: -0.2 }); // Accra fallback
+        }
       );
     } else {
-      setError("Geolocation not supported");
+      setError("Geolocation not supported. Using Accra center.");
+      setUserCoords({ lat: 5.6, lng: -0.2 });
     }
   }
 
@@ -188,7 +205,7 @@ export default function ClientHome({ farmers }) {
           farmers
             .filter(
               (farmer) =>
-                getDistance(userCoords.lat, userCoords.lng, farmer.location.lat, farmer.location.lng) <= 10
+                getDistance(userCoords.lat, userCoords.lng, farmer.location.lat, farmer.location.lng) <= 3
             )
             .map((farmer) => (
               <FarmerCard

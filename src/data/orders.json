@@ -1,120 +1,101 @@
 [
   {
+    "timestamp": 1745314966481,
     "items": [
       {
         "id": 1,
         "name": "Tomatoes",
-        "price": 3,
+        "price": 10,
         "stock": 50,
         "farmerId": 1,
-        "quantity": 2
-      },
-      {
-        "id": 2,
-        "name": "Eggs",
-        "price": 5,
-        "stock": 30,
-        "farmerId": 1,
-        "quantity": 1
+        "quantity": 3
       }
     ],
-    "timestamp": "2025-04-14T16:02:45.388Z",
-    "delivery": {
-      "address": "Haatso",
-      "zip": "GT 125-8349",
-      "coords": {
-        "lat": 5.636031957680952,
-        "lng": -0.20166634821911747
+    "address": "Near the green kiosk",
+    "location": "Osu, Accra, Ghana",
+    "status": "pending",
+    "deliveryTimes": [
+      {
+        "itemId": 1,
+        "farmerId": 1,
+        "time": "7 min"
       }
-    },
-    "status": "fulfilled"
+    ]
   },
   {
+    "timestamp": 1745315506593,
     "items": [
       {
-        "id": 1744661663172,
-        "name": "Cabbage",
-        "price": 2,
-        "stock": 30,
-        "farmerId": 1,
-        "quantity": 1
-      },
-      {
-        "id": 1,
-        "name": "Tomatoes",
-        "price": 3,
-        "stock": 50,
-        "farmerId": 1,
-        "quantity": 1
-      },
-      {
-        "id": 2,
-        "name": "Eggs",
-        "price": 5,
-        "stock": 30,
-        "farmerId": 1,
+        "id": 35,
+        "name": "Broccoli",
+        "price": 9,
+        "stock": 25,
+        "farmerId": 18,
         "quantity": 2
       }
     ],
-    "timestamp": "2025-04-14T20:15:06.372Z",
-    "delivery": {
-      "address": "haatso",
-      "zip": "345ert",
-      "coords": {
-        "lat": 5.666715045031923,
-        "lng": -0.21282017175595183
+    "address": "Near the blue kiosk",
+    "location": "Osu, Accra, Ghana",
+    "status": "pending",
+    "deliveryTimes": [
+      {
+        "itemId": 35,
+        "farmerId": 18,
+        "time": "25 min"
       }
-    },
-    "status": "fulfilled"
+    ]
   },
   {
+    "timestamp": 1745316353098,
     "items": [
       {
-        "id": 1744730779771,
-        "name": "Beetroot",
-        "price": 5,
-        "stock": 12,
-        "farmerId": 1,
+        "id": 35,
+        "name": "Broccoli",
+        "price": 9,
+        "stock": 25,
+        "farmerId": 18,
         "quantity": 1
       },
       {
-        "id": 1744661663172,
-        "name": "Cabbage",
-        "price": 2,
-        "stock": 30,
-        "farmerId": 1,
-        "quantity": 1
-      },
-      {
-        "id": 1,
-        "name": "Tomatoes",
-        "price": 3,
-        "stock": 50,
-        "farmerId": 1,
-        "quantity": 2
-      },
-      {
-        "id": 1744645251114,
-        "name": "Carrots",
-        "price": 4,
+        "id": 36,
+        "name": "Guavas",
+        "price": 8,
         "stock": 20,
-        "farmerId": 1,
+        "farmerId": 18,
+        "quantity": 1
+      },
+      {
+        "id": 1745316279913,
+        "name": "Carrots",
+        "price": 12,
+        "stock": 98,
+        "farmerId": 18,
         "quantity": 1
       }
     ],
-    "timestamp": "2025-04-15T15:26:40.372Z",
-    "delivery": {
-      "address": "adfadf",
-      "zip": "adfadfs",
-      "coords": {
-        "lat": 5.634905385533551,
-        "lng": -0.20133431062149332
+    "address": "near the green storybuilding",
+    "location": "Osu, Accra, Ghana",
+    "status": "pending",
+    "deliveryTimes": [
+      {
+        "itemId": 35,
+        "farmerId": 18,
+        "time": "25 min"
+      },
+      {
+        "itemId": 36,
+        "farmerId": 18,
+        "time": "25 min"
+      },
+      {
+        "itemId": 1745316279913,
+        "farmerId": 18,
+        "time": "25 min"
       }
-    },
-    "status": "fulfilled"
+    ]
   },
   {
-    "timestamp": 1745278362494,
+    "timestamp": 1745498993818,
     "items": [
       {
         "id": 7,
@@ -122,7 +103,7 @@
         "price": 7,
         "stock": 60,
         "farmerId": 4,
-        "quantity": 3
+        "quantity": 2
       },
       {
         "id": 8,
@@ -130,274 +111,22 @@
         "price": 10,
         "stock": 35,
         "farmerId": 4,
-        "quantity": 1
+        "quantity": 2
       }
     ],
     "address": "Suma Court Hotel",
-    "location": "Osu, Accra, Ghana",
+    "location": "Current Location",
     "status": "pending",
     "deliveryTimes": [
       {
         "itemId": 7,
         "farmerId": 4,
-        "time": "29 min"
+        "time": "7 min"
       },
       {
         "itemId": 8,
         "farmerId": 4,
-        "time": "29 min"
-      }
-    ]
-  },
-  {
-    "timestamp": 1745278391561,
-    "items": [
-      {
-        "id": 7,
-        "name": "Maize",
-        "price": 7,
-        "stock": 60,
-        "farmerId": 4,
-        "quantity": 3
-      },
-      {
-        "id": 8,
-        "name": "Onions",
-        "price": 10,
-        "stock": 35,
-        "farmerId": 4,
-        "quantity": 1
-      }
-    ],
-    "address": "Near the green kiosk",
-    "location": "Osu, Accra, Ghana",
-    "status": "pending",
-    "deliveryTimes": [
-      {
-        "itemId": 7,
-        "farmerId": 4,
-        "time": "29 min"
-      },
-      {
-        "itemId": 8,
-        "farmerId": 4,
-        "time": "29 min"
-      }
-    ]
-  },
-  {
-    "timestamp": 1745278392627,
-    "items": [
-      {
-        "id": 7,
-        "name": "Maize",
-        "price": 7,
-        "stock": 60,
-        "farmerId": 4,
-        "quantity": 3
-      },
-      {
-        "id": 8,
-        "name": "Onions",
-        "price": 10,
-        "stock": 35,
-        "farmerId": 4,
-        "quantity": 1
-      }
-    ],
-    "address": "Near the green kiosk",
-    "location": "Osu, Accra, Ghana",
-    "status": "pending",
-    "deliveryTimes": [
-      {
-        "itemId": 7,
-        "farmerId": 4,
-        "time": "29 min"
-      },
-      {
-        "itemId": 8,
-        "farmerId": 4,
-        "time": "29 min"
-      }
-    ]
-  },
-  {
-    "timestamp": 1745278394677,
-    "items": [
-      {
-        "id": 7,
-        "name": "Maize",
-        "price": 7,
-        "stock": 60,
-        "farmerId": 4,
-        "quantity": 3
-      },
-      {
-        "id": 8,
-        "name": "Onions",
-        "price": 10,
-        "stock": 35,
-        "farmerId": 4,
-        "quantity": 1
-      }
-    ],
-    "address": "Near the green kiosk",
-    "location": "Osu, Accra, Ghana",
-    "status": "pending",
-    "deliveryTimes": [
-      {
-        "itemId": 7,
-        "farmerId": 4,
-        "time": "29 min"
-      },
-      {
-        "itemId": 8,
-        "farmerId": 4,
-        "time": "29 min"
-      }
-    ]
-  },
-  {
-    "timestamp": 1745278396896,
-    "items": [
-      {
-        "id": 7,
-        "name": "Maize",
-        "price": 7,
-        "stock": 60,
-        "farmerId": 4,
-        "quantity": 3
-      },
-      {
-        "id": 8,
-        "name": "Onions",
-        "price": 10,
-        "stock": 35,
-        "farmerId": 4,
-        "quantity": 1
-      }
-    ],
-    "address": "Near the green kiosk",
-    "location": "Osu, Accra, Ghana",
-    "status": "pending",
-    "deliveryTimes": [
-      {
-        "itemId": 7,
-        "farmerId": 4,
-        "time": "29 min"
-      },
-      {
-        "itemId": 8,
-        "farmerId": 4,
-        "time": "29 min"
-      }
-    ]
-  },
-  {
-    "timestamp": 1745278397062,
-    "items": [
-      {
-        "id": 7,
-        "name": "Maize",
-        "price": 7,
-        "stock": 60,
-        "farmerId": 4,
-        "quantity": 3
-      },
-      {
-        "id": 8,
-        "name": "Onions",
-        "price": 10,
-        "stock": 35,
-        "farmerId": 4,
-        "quantity": 1
-      }
-    ],
-    "address": "Near the green kiosk",
-    "location": "Osu, Accra, Ghana",
-    "status": "pending",
-    "deliveryTimes": [
-      {
-        "itemId": 7,
-        "farmerId": 4,
-        "time": "29 min"
-      },
-      {
-        "itemId": 8,
-        "farmerId": 4,
-        "time": "29 min"
-      }
-    ]
-  },
-  {
-    "timestamp": 1745278397260,
-    "items": [
-      {
-        "id": 7,
-        "name": "Maize",
-        "price": 7,
-        "stock": 60,
-        "farmerId": 4,
-        "quantity": 3
-      },
-      {
-        "id": 8,
-        "name": "Onions",
-        "price": 10,
-        "stock": 35,
-        "farmerId": 4,
-        "quantity": 1
-      }
-    ],
-    "address": "Near the green kiosk",
-    "location": "Osu, Accra, Ghana",
-    "status": "pending",
-    "deliveryTimes": [
-      {
-        "itemId": 7,
-        "farmerId": 4,
-        "time": "29 min"
-      },
-      {
-        "itemId": 8,
-        "farmerId": 4,
-        "time": "29 min"
-      }
-    ]
-  },
-  {
-    "timestamp": 1745278505847,
-    "items": [
-      {
-        "id": 7,
-        "name": "Maize",
-        "price": 7,
-        "stock": 60,
-        "farmerId": 4,
-        "quantity": 3
-      },
-      {
-        "id": 8,
-        "name": "Onions",
-        "price": 10,
-        "stock": 35,
-        "farmerId": 4,
-        "quantity": 1
-      }
-    ],
-    "address": "Near the green kiosk",
-    "location": "Osu, Accra, Ghana",
-    "status": "pending",
-    "deliveryTimes": [
-      {
-        "itemId": 7,
-        "farmerId": 4,
-        "time": "29 min"
-      },
-      {
-        "itemId": 8,
-        "farmerId": 4,
-        "time": "29 min"
+        "time": "7 min"
       }
     ]
   }

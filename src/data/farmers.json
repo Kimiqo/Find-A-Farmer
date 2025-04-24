@@ -2,536 +2,208 @@
   {
     "id": 1,
     "name": "Osu Fresh Farms",
-    "location": {
-      "lat": 5.5536,
-      "lng": -0.183,
-      "address": "Oxford St, Osu, Accra"
-    },
+    "location": { "lat": 5.5536, "lng": -0.1830, "address": "Oxford St, Osu, Accra" },
     "products": [
-      {
-        "id": 1,
-        "name": "Tomatoes",
-        "price": 10,
-        "stock": 50
-      },
-      {
-        "id": 2,
-        "name": "Okra",
-        "price": 8,
-        "stock": 30
-      }
+      { "id": 1, "name": "Tomatoes", "price": 10, "stock": 50 },
+      { "id": 2, "name": "Okra", "price": 8, "stock": 30 }
     ]
   },
   {
     "id": 2,
     "name": "Legon Green Fields",
-    "location": {
-      "lat": 5.6508,
-      "lng": -0.1867,
-      "address": "University Rd, Legon, Accra"
-    },
+    "location": { "lat": 5.6508, "lng": -0.1867, "address": "University Rd, Legon, Accra" },
     "products": [
-      {
-        "id": 3,
-        "name": "Yams",
-        "price": 15,
-        "stock": 20
-      },
-      {
-        "id": 4,
-        "name": "Peppers",
-        "price": 6,
-        "stock": 40
-      }
+      { "id": 3, "name": "Yams", "price": 15, "stock": 20 },
+      { "id": 4, "name": "Peppers", "price": 6, "stock": 40 }
     ]
   },
   {
     "id": 3,
     "name": "Madina Market Growers",
-    "location": {
-      "lat": 5.6767,
-      "lng": -0.1665,
-      "address": "Madina Market, Accra"
-    },
+    "location": { "lat": 5.6767, "lng": -0.1665, "address": "Madina Market, Accra" },
     "products": [
-      {
-        "id": 5,
-        "name": "Cassava",
-        "price": 12,
-        "stock": 25
-      },
-      {
-        "id": 6,
-        "name": "Plantains",
-        "price": 9,
-        "stock": 15
-      },
-      {
-        "id": 1745278824431,
-        "name": "Tomatoes",
-        "price": 20,
-        "stock": 24
-      }
+      { "id": 5, "name": "Cassava", "price": 12, "stock": 25 },
+      { "id": 6, "name": "Plantains", "price": 9, "stock": 15 }
     ]
   },
   {
     "id": 4,
     "name": "Haatso Harvest",
-    "location": {
-      "lat": 5.668,
-      "lng": -0.205,
-      "address": "Haatso Ecomog Rd, Accra"
-    },
+    "location": { "lat": 5.6680, "lng": -0.2050, "address": "Haatso Ecomog Rd, Accra" },
     "products": [
-      {
-        "id": 7,
-        "name": "Maize",
-        "price": 7,
-        "stock": 60
-      },
-      {
-        "id": 8,
-        "name": "Onions",
-        "price": 10,
-        "stock": 35
-      }
+      { "id": 7, "name": "Maize", "price": 7, "stock": 60 },
+      { "id": 8, "name": "Onions", "price": 10, "stock": 35 }
     ]
   },
   {
     "id": 5,
     "name": "Accra Mall Greens",
-    "location": {
-      "lat": 5.622,
-      "lng": -0.173,
-      "address": "Tetteh Quarshie, Accra"
-    },
+    "location": { "lat": 5.6220, "lng": -0.1730, "address": "Tetteh Quarshie, Accra" },
     "products": [
-      {
-        "id": 9,
-        "name": "Cabbage",
-        "price": 8,
-        "stock": 40
-      },
-      {
-        "id": 10,
-        "name": "Carrots",
-        "price": 9,
-        "stock": 30
-      }
+      { "id": 9, "name": "Cabbage", "price": 8, "stock": 40 },
+      { "id": 10, "name": "Carrots", "price": 9, "stock": 30 }
     ]
   },
   {
     "id": 6,
     "name": "Achimota Agro",
-    "location": {
-      "lat": 5.625,
-      "lng": -0.234,
-      "address": "Achimota Market, Accra"
-    },
+    "location": { "lat": 5.6250, "lng": -0.2340, "address": "Achimota Market, Accra" },
     "products": [
-      {
-        "id": 11,
-        "name": "Groundnuts",
-        "price": 12,
-        "stock": 20
-      },
-      {
-        "id": 12,
-        "name": "Eggplant",
-        "price": 6,
-        "stock": 50
-      }
+      { "id": 11, "name": "Groundnuts", "price": 12, "stock": 20 },
+      { "id": 12, "name": "Eggplant", "price": 6, "stock": 50 }
     ]
   },
   {
     "id": 7,
     "name": "Dzorwulu Delights",
-    "location": {
-      "lat": 5.61,
-      "lng": -0.202,
-      "address": "Dzorwulu Junction, Accra"
-    },
+    "location": { "lat": 5.6100, "lng": -0.2020, "address": "Dzorwulu Junction, Accra" },
     "products": [
-      {
-        "id": 13,
-        "name": "Spinach",
-        "price": 5,
-        "stock": 45
-      },
-      {
-        "id": 14,
-        "name": "Mangoes",
-        "price": 10,
-        "stock": 25
-      }
+      { "id": 13, "name": "Spinach", "price": 5, "stock": 45 },
+      { "id": 14, "name": "Mangoes", "price": 10, "stock": 25 }
     ]
   },
   {
     "id": 8,
     "name": "East Legon Farms",
-    "location": {
-      "lat": 5.637,
-      "lng": -0.159,
-      "address": "Lagos Ave, East Legon, Accra"
-    },
+    "location": { "lat": 5.6370, "lng": -0.1590, "address": "Lagos Ave, East Legon, Accra" },
     "products": [
-      {
-        "id": 15,
-        "name": "Pineapples",
-        "price": 8,
-        "stock": 30
-      },
-      {
-        "id": 16,
-        "name": "Lettuce",
-        "price": 6,
-        "stock": 40
-      }
+      { "id": 15, "name": "Pineapples", "price": 8, "stock": 30 },
+      { "id": 16, "name": "Lettuce", "price": 6, "stock": 40 }
     ]
   },
   {
     "id": 9,
     "name": "Cantonments Crops",
-    "location": {
-      "lat": 5.58,
-      "lng": -0.176,
-      "address": "4th Circular Rd, Cantonments, Accra"
-    },
+    "location": { "lat": 5.5800, "lng": -0.1760, "address": "4th Circular Rd, Cantonments, Accra" },
     "products": [
-      {
-        "id": 17,
-        "name": "Cucumbers",
-        "price": 7,
-        "stock": 35
-      },
-      {
-        "id": 18,
-        "name": "Oranges",
-        "price": 9,
-        "stock": 20
-      }
+      { "id": 17, "name": "Cucumbers", "price": 7, "stock": 35 },
+      { "id": 18, "name": "Oranges", "price": 9, "stock": 20 }
     ]
   },
   {
     "id": 10,
     "name": "Tema Fresh",
-    "location": {
-      "lat": 5.669,
-      "lng": -0.016,
-      "address": "Community 1, Tema, Accra"
-    },
+    "location": { "lat": 5.6690, "lng": -0.0160, "address": "Community 1, Tema, Accra" },
     "products": [
-      {
-        "id": 19,
-        "name": "Watermelons",
-        "price": 12,
-        "stock": 15
-      },
-      {
-        "id": 20,
-        "name": "Ginger",
-        "price": 8,
-        "stock": 30
-      }
+      { "id": 19, "name": "Watermelons", "price": 12, "stock": 15 },
+      { "id": 20, "name": "Ginger", "price": 8, "stock": 30 }
     ]
   },
   {
     "id": 11,
     "name": "Adabraka Agro",
-    "location": {
-      "lat": 5.563,
-      "lng": -0.211,
-      "address": "Kojo Thompson Rd, Adabraka, Accra"
-    },
+    "location": { "lat": 5.5630, "lng": -0.2110, "address": "Kojo Thompson Rd, Adabraka, Accra" },
     "products": [
-      {
-        "id": 21,
-        "name": "Sweet Potatoes",
-        "price": 10,
-        "stock": 25
-      },
-      {
-        "id": 22,
-        "name": "Garlic",
-        "price": 6,
-        "stock": 40
-      }
+      { "id": 21, "name": "Sweet Potatoes", "price": 10, "stock": 25 },
+      { "id": 22, "name": "Garlic", "price": 6, "stock": 40 }
     ]
   },
   {
     "id": 12,
     "name": "Labone Greens",
-    "location": {
-      "lat": 5.568,
-      "lng": -0.171,
-      "address": "Labone Crescent, Accra"
-    },
+    "location": { "lat": 5.5680, "lng": -0.1710, "address": "Labone Crescent, Accra" },
     "products": [
-      {
-        "id": 23,
-        "name": "Avocados",
-        "price": 9,
-        "stock": 20
-      },
-      {
-        "id": 24,
-        "name": "Beets",
-        "price": 7,
-        "stock": 30
-      }
+      { "id": 23, "name": "Avocados", "price": 9, "stock": 20 },
+      { "id": 24, "name": "Beets", "price": 7, "stock": 30 }
     ]
   },
   {
     "id": 13,
     "name": "Nima Market Farms",
-    "location": {
-      "lat": 5.585,
-      "lng": -0.206,
-      "address": "Nima Market, Accra"
-    },
+    "location": { "lat": 5.5850, "lng": -0.2060, "address": "Nima Market, Accra" },
     "products": [
-      {
-        "id": 25,
-        "name": "Chili Peppers",
-        "price": 5,
-        "stock": 50
-      },
-      {
-        "id": 26,
-        "name": "Pawpaw",
-        "price": 8,
-        "stock": 25
-      }
+      { "id": 25, "name": "Chili Peppers", "price": 5, "stock": 50 },
+      { "id": 26, "name": "Pawpaw", "price": 8, "stock": 25 }
     ]
   },
   {
     "id": 14,
     "name": "Tesano Tastes",
-    "location": {
-      "lat": 5.606,
-      "lng": -0.233,
-      "address": "Tesano Estates, Accra"
-    },
+    "location": { "lat": 5.6060, "lng": -0.2330, "address": "Tesano Estates, Accra" },
     "products": [
-      {
-        "id": 27,
-        "name": "Kale",
-        "price": 6,
-        "stock": 35
-      },
-      {
-        "id": 28,
-        "name": "Bananas",
-        "price": 7,
-        "stock": 30
-      }
+      { "id": 27, "name": "Kale", "price": 6, "stock": 35 },
+      { "id": 28, "name": "Bananas", "price": 7, "stock": 30 }
     ]
   },
   {
     "id": 15,
     "name": "Spintex Sprouts",
-    "location": {
-      "lat": 5.627,
-      "lng": -0.137,
-      "address": "Spintex Rd, Accra"
-    },
+    "location": { "lat": 5.6270, "lng": -0.1370, "address": "Spintex Rd, Accra" },
     "products": [
-      {
-        "id": 29,
-        "name": "Zucchini",
-        "price": 8,
-        "stock": 20
-      },
-      {
-        "id": 30,
-        "name": "Lemons",
-        "price": 6,
-        "stock": 40
-      }
+      { "id": 29, "name": "Zucchini", "price": 8, "stock": 20 },
+      { "id": 30, "name": "Lemons", "price": 6, "stock": 40 }
     ]
   },
   {
     "id": 16,
     "name": "Airport City Agro",
-    "location": {
-      "lat": 5.605,
-      "lng": -0.176,
-      "address": "Airport City, Accra"
-    },
+    "location": { "lat": 5.6050, "lng": -0.1760, "address": "Airport City, Accra" },
     "products": [
-      {
-        "id": 31,
-        "name": "Green Beans",
-        "price": 7,
-        "stock": 30
-      },
-      {
-        "id": 32,
-        "name": "Coconuts",
-        "price": 10,
-        "stock": 15
-      }
+      { "id": 31, "name": "Green Beans", "price": 7, "stock": 30 },
+      { "id": 32, "name": "Coconuts", "price": 10, "stock": 15 }
     ]
   },
   {
     "id": 17,
     "name": "Abelemkpe Acres",
-    "location": {
-      "lat": 5.618,
-      "lng": -0.218,
-      "address": "Abelemkpe Lane, Accra"
-    },
+    "location": { "lat": 5.6180, "lng": -0.2180, "address": "Abelemkpe Lane, Accra" },
     "products": [
-      {
-        "id": 33,
-        "name": "Pumpkins",
-        "price": 12,
-        "stock": 20
-      },
-      {
-        "id": 34,
-        "name": "Radishes",
-        "price": 5,
-        "stock": 40
-      }
+      { "id": 33, "name": "Pumpkins", "price": 12, "stock": 20 },
+      { "id": 34, "name": "Radishes", "price": 5, "stock": 40 }
     ]
   },
   {
     "id": 18,
     "name": "Westlands Farm",
-    "location": {
-      "lat": 5.645,
-      "lng": -0.208,
-      "address": "Westlands Blvd, Accra"
-    },
+    "location": { "lat": 5.6450, "lng": -0.2080, "address": "Westlands Blvd, Accra" },
     "products": [
-      {
-        "id": 35,
-        "name": "Broccoli",
-        "price": 9,
-        "stock": 25
-      },
-      {
-        "id": 36,
-        "name": "Guavas",
-        "price": 8,
-        "stock": 20
-      }
+      { "id": 35, "name": "Broccoli", "price": 9, "stock": 25 },
+      { "id": 36, "name": "Guavas", "price": 8, "stock": 20 }
     ]
   },
   {
     "id": 19,
     "name": "Teshie Tastes",
-    "location": {
-      "lat": 5.583,
-      "lng": -0.107,
-      "address": "Teshie Nungua Rd, Accra"
-    },
+    "location": { "lat": 5.5830, "lng": -0.1070, "address": "Teshie Nungua Rd, Accra" },
     "products": [
-      {
-        "id": 37,
-        "name": "Cauliflower",
-        "price": 10,
-        "stock": 20
-      },
-      {
-        "id": 38,
-        "name": "Limes",
-        "price": 6,
-        "stock": 30
-      }
+      { "id": 37, "name": "Cauliflower", "price": 10, "stock": 20 },
+      { "id": 38, "name": "Limes", "price": 6, "stock": 30 }
     ]
   },
   {
     "id": 20,
     "name": "Kaneshie Crops",
-    "location": {
-      "lat": 5.57,
-      "lng": -0.239,
-      "address": "Kaneshie Market, Accra"
-    },
+    "location": { "lat": 5.5700, "lng": -0.2390, "address": "Kaneshie Market, Accra" },
     "products": [
-      {
-        "id": 39,
-        "name": "Sorghum",
-        "price": 8,
-        "stock": 25
-      },
-      {
-        "id": 40,
-        "name": "Mint",
-        "price": 5,
-        "stock": 35
-      }
+      { "id": 39, "name": "Sorghum", "price": 8, "stock": 25 },
+      { "id": 40, "name": "Mint", "price": 5, "stock": 35 }
     ]
   },
   {
     "id": 21,
     "name": "Alajo Agro",
-    "location": {
-      "lat": 5.595,
-      "lng": -0.223,
-      "address": "Alajo Rd, Accra"
-    },
+    "location": { "lat": 5.5950, "lng": -0.2230, "address": "Alajo Rd, Accra" },
     "products": [
-      {
-        "id": 41,
-        "name": "Millet",
-        "price": 7,
-        "stock": 30
-      },
-      {
-        "id": 42,
-        "name": "Parsley",
-        "price": 4,
-        "stock": 40
-      }
+      { "id": 41, "name": "Millet", "price": 7, "stock": 30 },
+      { "id": 42, "name": "Parsley", "price": 4, "stock": 40 }
     ]
   },
   {
     "id": 22,
     "name": "Roman Ridge Roots",
-    "location": {
-      "lat": 5.598,
-      "lng": -0.192,
-      "address": "Roman Ridge, Accra"
-    },
+    "location": { "lat": 5.5980, "lng": -0.1920, "address": "Roman Ridge, Accra" },
     "products": [
-      {
-        "id": 43,
-        "name": "Celery",
-        "price": 6,
-        "stock": 25
-      },
-      {
-        "id": 44,
-        "name": "Passion Fruit",
-        "price": 9,
-        "stock": 20
-      }
+      { "id": 43, "name": "Celery", "price": 6, "stock": 25 },
+      { "id": 44, "name": "Passion Fruit", "price": 9, "stock": 20 }
     ]
   },
   {
     "id": 23,
     "name": "La Paz Produce",
-    "location": {
-      "lat": 5.561,
-      "lng": -0.252,
-      "address": "La Paz Rd, Accra"
-    },
+    "location": { "lat": 5.5610, "lng": -0.2520, "address": "La Paz Rd, Accra" },
     "products": [
-      {
-        "id": 45,
-        "name": "Artichokes",
-        "price": 12,
-        "stock": 15
-      },
-      {
-        "id": 46,
-        "name": "Basil",
-        "price": 5,
-        "stock": 30
-      }
+      { "id": 45, "name": "Artichokes", "price": 12, "stock": 15 },
+      { "id": 46, "name": "Basil", "price": 5, "stock": 30 }
     ]
   }
 ]

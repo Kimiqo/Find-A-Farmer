@@ -28,12 +28,18 @@ export function CartProvider({ children }) {
     setCart(cart.filter((item) => !(item.id === productId && item.farmerId === farmerId)));
   }
 
+  const clearCart = () => {
+    setCart([]);
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );
 }
+
+
 
 export function useCart() {
   return useContext(CartContext);
