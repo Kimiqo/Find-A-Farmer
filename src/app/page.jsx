@@ -1,26 +1,35 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
-export default function LandingPage() {
+export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center p-4 sm:p-6 md:p-8 bg-background">
-      <div className="relative w-full max-w-6xl mb-8">
+    <main className="bg-gradient-to-br from-[#f7fafc] to-[#e5e7eb]">
+      <section className="relative w-full h-[400px] sm:h-[500px] overflow-hidden">
         <Image
           src="/images/farm-hero.jpg"
-          alt="Vibrant farm landscape with rolling fields"
-          width={1200}
-          height={400}
-          className="w-full h-48 sm:h-64 md:h-80 object-cover rounded-lg shadow-md"
-          loading="eager"
+          alt="Farmers market hero image"
+          fill
+          className="object-cover"
           priority
         />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-lg">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground">
-            Find a Farmer
-          </h1>
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div className="text-center text-primary-foreground">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+              Fresh from Accra Farms
+            </h1>
+            <p className="text-lg sm:text-xl mb-6">
+              Connect with local farmers for fresh produce
+            </p>
+            <Link href="/search">
+              <button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg text-lg animate-pulse">
+                Shop Now
+              </button>
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
+      <section className="min-h-screen flex flex-col items-center p-4 sm:p-6 md:p-8 bg-background">
       <div className="text-center max-w-2xl mb-8">
         <p className="text-lg sm:text-xl text-muted-foreground">
           Connect with local farmers to buy fresh, sustainable produce directly from the source.
@@ -82,6 +91,7 @@ export default function LandingPage() {
           </p>
         </div>
       </div>
+      </section>
     </main>
   );
 }
