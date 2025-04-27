@@ -23,13 +23,24 @@ export default function SignUpPage() {
 
   // Geocode farm address using Mapbox
   async function geocodeAddress(address) {
-    if (!address) return;
+    if (!address || typeof address !== "string" || address.trim() === "") {
+      setError("Please provide a valid farm address.");
+      return;
+    }
+    const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+    if (!token) {
+      setError("Mapbox token is missing. Please contact support.");
+      console.error("Missing NEXT_PUBLIC_MAPBOX_TOKEN");
+      return;
+    }
     try {
-      const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-      const encodedAddress = encodeURIComponent(address);
-      const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedAddress}.json?access_token=${token}&limit=1`
-      );
+      const encodedAddress = encodeURIComponent(address.trim());
+      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedAddress}.json?access_token=${token}&limit=1`;
+      console.log("Geocoding URL:", url); // Debug log
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Mapbox API error: ${response.statusText}`);
+      }
       const data = await response.json();
       if (data.features.length > 0) {
         const [lng, lat] = data.features[0].center;
@@ -39,16 +50,19 @@ export default function SignUpPage() {
         setError("Could not find location. Please try a different address.");
       }
     } catch (err) {
-      setError("Failed to geocode address.");
-      console.error("Geocode error:", err);
+      setError("Failed to geocode address. Please try again.");
+      console.error("Geocode error:", err.message, err.stack);
     }
   }
 
   useEffect(() => {
     if (farmAddress && role === "farmer-admin") {
       geocodeAddress(farmAddress);
+    } else {
+      setFarmLat("");
+      setFarmLng("");
     }
-  }, [farmAddress]);
+  }, [farmAddress, role]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -61,7 +75,7 @@ export default function SignUpPage() {
     }
 
     if (role === "farmer-admin" && (!farmName || !farmAddress || !farmLat || !farmLng)) {
-      setError("Farm name and address are required for farmers");
+      setError("Farm name and valid address are required for farmers");
       return;
     }
 
@@ -92,6 +106,7 @@ export default function SignUpPage() {
       setTimeout(() => router.push("/auth/signin"), 2000);
     } catch (err) {
       setError(err.message);
+      console.error("Signup submit error:", err.message, err.stack);
     }
   }
 
