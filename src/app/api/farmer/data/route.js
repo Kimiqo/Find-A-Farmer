@@ -35,6 +35,8 @@ export async function GET(req) {
         orders: orders.map((o) => ({
           _id: o._id.toString(),
           buyerId: o.buyerId,
+          buyerName: o.buyerName,
+          buyerPhone: o.buyerPhone,
           items: o.items,
           total: o.total,
           status: o.status,
@@ -82,6 +84,30 @@ export async function POST(req) {
         { $push: { products: { id: productId, name, price: parseFloat(price), stock: parseInt(stock) } } }
       );
       return new Response(JSON.stringify({ message: "Product added" }), { status: 201 });
+    }
+
+    if (action === "updateProduct") {
+      const { productId, name, price, stock } = data;
+      if (!productId || !name || !price || stock === undefined) {
+        return new Response(JSON.stringify({ error: "Missing fields" }), { status: 400 });
+      }
+      await db.collection("farmers").updateOne(
+        { id: farmerId, "products.id": parseInt(productId) },
+        { $set: { "products.$.name": name, "products.$.price": parseFloat(price), "products.$.stock": parseInt(stock) } }
+      );
+      return new Response(JSON.stringify({ message: "Product updated" }), { status: 200 });
+    }
+
+    if (action === "removeProduct") {
+      const { productId } = data;
+      if (!productId) {
+        return new Response(JSON.stringify({ error: "Missing productId" }), { status: 400 });
+      }
+      await db.collection("farmers").updateOne(
+        { id: farmerId },
+        { $pull: { products: { id: parseInt(productId) } } }
+      );
+      return new Response(JSON.stringify({ message: "Product removed" }), { status: 200 });
     }
 
     if (action === "updateOrderStatus") {

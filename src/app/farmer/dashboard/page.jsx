@@ -14,6 +14,7 @@ export default function FarmerDashboard() {
   const [orders, setOrders] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [newProduct, setNewProduct] = useState({ name: "", price: "", stock: "" });
+  const [editProduct, setEditProduct] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -29,10 +30,10 @@ export default function FarmerDashboard() {
       try {
         const res = await fetch("/api/farmer/data");
         const data = await res.json();
-        if (!res.ok) throw new Error(data.details || "Failed to fetch data");
-        setProducts(data.products);
-        setOrders(data.orders);
-        setReviews(data.reviews);
+        if (!res.ok) throw new Error(data.error || "Failed to fetch data");
+        setProducts(data.products || []);
+        setOrders(data.orders || []);
+        setReviews(data.reviews || []);
       } catch (err) {
         setError(err.message);
       }
@@ -43,22 +44,69 @@ export default function FarmerDashboard() {
   async function handleAddProduct(e) {
     e.preventDefault();
     setError("");
+    if (!newProduct.name || !newProduct.price || !newProduct.stock) {
+      setError("All fields are required");
+      return;
+    }
     try {
       const res = await fetch("/api/farmer/data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "addProduct",
-          data: newProduct,
-        }),
+        body: JSON.stringify({ action: "addProduct", data: newProduct }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.details || "Failed to add product");
+      if (!res.ok) throw new Error(data.error || "Failed to add product");
       setNewProduct({ name: "", price: "", stock: "" });
       const updatedRes = await fetch("/api/farmer/data");
       if (updatedRes.ok) {
         const updatedData = await updatedRes.json();
-        setProducts(updatedData.products);
+        setProducts(updatedData.products || []);
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  async function handleUpdateProduct(e) {
+    e.preventDefault();
+    setError("");
+    if (!editProduct.name || !editProduct.price || editProduct.stock === undefined) {
+      setError("All fields are required");
+      return;
+    }
+    try {
+      const res = await fetch("/api/farmer/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "updateProduct", data: editProduct }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update product");
+      setEditProduct(null);
+      const updatedRes = await fetch("/api/farmer/data");
+      if (updatedRes.ok) {
+        const updatedData = await updatedRes.json();
+        setProducts(updatedData.products || []);
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  async function handleRemoveProduct(productId) {
+    setError("");
+    try {
+      const res = await fetch("/api/farmer/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "removeProduct", data: { productId } }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to remove product");
+      const updatedRes = await fetch("/api/farmer/data");
+      if (updatedRes.ok) {
+        const updatedData = await updatedRes.json();
+        setProducts(updatedData.products || []);
       }
     } catch (err) {
       setError(err.message);
@@ -71,17 +119,14 @@ export default function FarmerDashboard() {
       const res = await fetch("/api/farmer/data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "updateOrderStatus",
-          data: { orderId, status },
-        }),
+        body: JSON.stringify({ action: "updateOrderStatus", data: { orderId, status } }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.details || "Failed to update order");
+      if (!res.ok) throw new Error(data.error || "Failed to update order");
       const updatedRes = await fetch("/api/farmer/data");
       if (updatedRes.ok) {
         const updatedData = await updatedRes.json();
-        setOrders(updatedData.orders);
+        setOrders(updatedData.orders || []);
       }
     } catch (err) {
       setError(err.message);
@@ -146,11 +191,25 @@ export default function FarmerDashboard() {
             products.map((product) => (
               <Card key={product.id} className="hover:shadow-xl transition-shadow animate-slide-up">
                 <CardHeader>
-                  <CardTitle className="text-lg">{product.name}</CardTitle>
+                  <CardTitle className="text-lg">{product.name || "Unnamed Product"}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground">Price: GHS {product.price.toFixed(2)}</p>
-                  <p className="text-sm text-muted-foreground">Stock: {product.stock}</p>
+                  <p className="text-sm text-muted-foreground">Price: GHS {(product.price || 0).toFixed(2)}</p>
+                  <p className="text-sm text-muted-foreground">Stock: {product.stock || 0}</p>
+                  <div className="mt-2 flex space-x-2">
+                    <Button
+                      onClick={() => setEditProduct(product)}
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => handleRemoveProduct(product.id)}
+                      className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-lg"
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))
@@ -158,6 +217,47 @@ export default function FarmerDashboard() {
             <p className="text-muted-foreground">No products yet.</p>
           )}
         </div>
+        {editProduct && (
+          <div className="mt-4">
+            <h2 className="text-2xl mb-4 text-secondary">Edit Product</h2>
+            <form onSubmit={handleUpdateProduct} className="space-y-4 max-w-md">
+              <Input
+                placeholder="Product Name"
+                value={editProduct.name || ""}
+                onChange={(e) => setEditProduct({ ...editProduct, name: e.target.value })}
+                className="focus:ring-2 focus:ring-primary rounded-lg"
+              />
+              <Input
+                type="number"
+                placeholder="Price (GHS)"
+                value={editProduct.price || ""}
+                onChange={(e) => setEditProduct({ ...editProduct, price: e.target.value })}
+                className="focus:ring-2 focus:ring-primary rounded-lg"
+              />
+              <Input
+                type="number"
+                placeholder="Stock"
+                value={editProduct.stock || ""}
+                onChange={(e) => setEditProduct({ ...editProduct, stock: e.target.value })}
+                className="focus:ring-2 focus:ring-primary rounded-lg"
+              />
+              <div className="flex space-x-2">
+                <Button
+                  type="submit"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg animate-pulse"
+                >
+                  Save
+                </Button>
+                <Button
+                  onClick={() => setEditProduct(null)}
+                  className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-lg"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </div>
+        )}
       </section>
       <section className="mb-8">
         <h2 className="text-2xl mb-4 text-secondary">Orders</h2>
@@ -166,7 +266,10 @@ export default function FarmerDashboard() {
             {orders.map((order) => (
               <li key={order._id} className="p-4 bg-card rounded-lg shadow-md animate-slide-up">
                 <p className="text-sm text-muted-foreground">Order ID: {order._id}</p>
-                <p className="text-sm text-muted-foreground">Total: GHS {order.total}</p>
+                <p className="text-sm text-muted-foreground">
+                  Buyer: {order.buyerName || "Unknown"} ({order.buyerPhone || "N/A"})
+                </p>
+                <p className="text-sm text-muted-foreground">Total: GHS {(order.total || 0).toFixed(2)}</p>
                 <p className="text-sm text-muted-foreground">Status: {order.status}</p>
                 <p className="text-sm text-muted-foreground">
                   Created: {new Date(order.createdAt).toLocaleDateString()}
@@ -192,10 +295,10 @@ export default function FarmerDashboard() {
           <ul className="space-y-4">
             {reviews.map((review) => (
               <li key={review._id} className="p-4 bg-card rounded-lg shadow-md animate-slide-up">
-                <p className="text-sm text-muted-foreground">Rating: {review.rating}/5</p>
-                <p className="text-sm">{review.comment}</p>
+                <p className="text-sm text-muted-foreground">Rating: {review.rating || "N/A"}/5</p>
+                <p className="text-sm">{review.comment || "No comment"}</p>
                 <p className="text-sm text-muted-foreground">
-                  By {review.userName} on {new Date(review.createdAt).toLocaleDateString()}
+                  By {review.userName || "Anonymous"} on {new Date(review.createdAt).toLocaleDateString()}
                 </p>
               </li>
             ))}

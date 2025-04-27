@@ -1,70 +1,84 @@
 "use client";
 
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function SignIn() {
+export default function SignInPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      if (session.user.role === "farmer-admin") {
+        router.push("/farmer/dashboard");
+      } else if (session.user.role === "admin-admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/");
+      }
+    }
+  }, [session, status, router]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-    try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-      if (result?.error) {
-        setError(result.error);
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+    if (result?.error) {
+      if (result.error === "Your farmer account is pending approval") {
+        setError("Your farmer account is pending approval. Please wait for admin approval.");
       } else {
-        router.push("/");
+        setError(result.error || "Invalid email or password");
       }
-    } catch {
-      setError("Failed to sign in");
     }
   }
 
+  if (status === "loading") {
+    return <div className="p-4 text-gray-500">Loading...</div>;
+  }
+
   return (
-    <main className="p-4 sm:p-6 md:p-8 max-w-md mx-auto bg-gradient-to-br from-[#f7fafc] to-[#e5e7eb] rounded-xl shadow-lg">
-      <h1 className="text-3xl md:text-4xl mb-6 text-secondary">Sign In</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="focus:ring-2 focus:ring-primary rounded-lg"
-          aria-label="Email"
-        />
-        <Input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="focus:ring-2 focus:ring-primary rounded-lg"
-          aria-label="Password"
-        />
-        {error && <p className="text-destructive">{error}</p>}
-        <Button
-          type="submit"
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg animate-pulse"
-        >
-          Sign In
-        </Button>
-      </form>
-      <p className="mt-4 text-sm text-muted-foreground">
-        Don’t have an account?{" "}
-        <a href="/auth/signup" className="text-primary hover:underline">
-          Sign Up
-        </a>
-      </p>
+    <main className="p-4 sm:p-6 md:p-8 max-w-md mx-auto">
+      <Card>
+        <CardHeader>
+          <CardTitle>Sign In</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <Button
+              type="submit"
+              className="w-full bg-[#2f855a] hover:bg-[#2f855a]/90 text-white"
+            >
+              Sign In
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </main>
   );
 }

@@ -11,12 +11,20 @@ export async function GET(req) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }
 
+  const { searchParams } = new URL(req.url);
+  const search = searchParams.get("search") || "";
+
   try {
     await client.connect();
     const db = client.db("farmers_app");
 
-    const farmers = await db.collection("farmers").find().toArray();
+    const farmersQuery = search
+      ? { name: { $regex: search, $options: "i" } }
+      : {};
+    const farmers = await db.collection("farmers").find(farmersQuery).toArray();
     const orders = await db.collection("orders").find().toArray();
+    const reviews = await db.collection("reviews").find().toArray();
+    const notifications = await db.collection("notifications").find().toArray();
 
     return new Response(
       JSON.stringify({
@@ -25,15 +33,35 @@ export async function GET(req) {
           name: f.name,
           location: f.location,
           products: f.products,
+          status: f.status,
         })),
         orders: orders.map((o) => ({
           _id: o._id.toString(),
           farmerId: o.farmerId,
           buyerId: o.buyerId,
+          buyerName: o.buyerName,
+          buyerPhone: o.buyerPhone,
           items: o.items,
           total: o.total,
           status: o.status,
-          createdAt: o.createdAt || new Date().toISOString(), // Fallback
+          createdAt: o.createdAt || new Date().toISOString(),
+        })),
+        reviews: reviews.map((r) => ({
+          _id: r._id.toString(),
+          farmerId: r.farmerId,
+          rating: r.rating,
+          comment: r.comment,
+          userName: r.userName,
+          createdAt: r.createdAt || new Date().toISOString(),
+        })),
+        notifications: notifications.map((n) => ({
+          _id: n._id.toString(),
+          type: n.type,
+          userId: n.userId,
+          userName: n.userName,
+          userEmail: n.userEmail,
+          status: n.status,
+          createdAt: n.createdAt || new Date().toISOString(),
         })),
       }),
       { status: 200 }

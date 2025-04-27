@@ -1,16 +1,16 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
-import { Button } from "@/components/ui/button";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   if (status === "loading") {
-    return <div className="p-4 text-muted-foreground">Loading...</div>;
+    return <div className="p-4 text-gray-500">Loading...</div>;
   }
 
   if (!session) {
@@ -19,22 +19,32 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto bg-gradient-to-br from-[#f7fafc] to-[#e5e7eb] rounded-xl shadow-lg">
-      <h1 className="text-3xl md:text-4xl mb-6 text-secondary">Your Profile</h1>
-      <div className="space-y-4">
-        <p className="text-lg"><strong>Name:</strong> {session.user.name}</p>
-        <p className="text-lg"><strong>Email:</strong> {session.user.email}</p>
-        <p className="text-lg"><strong>Role:</strong> {session.user.role}</p>
-        {session.user.role === "farmer-admin" && (
-          <p className="text-lg"><strong>Farmer ID:</strong> {session.user.farmerId}</p>
-        )}
+    <main className="p-4 sm:p-6 md:p-8 max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Profile</h1>
         <Button
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-lg animate-pulse"
+          className="bg-red-500 hover:bg-red-600 text-white"
         >
           Sign Out
         </Button>
       </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>User Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-600">Name: {session.user.name}</p>
+          <p className="text-sm text-gray-600">Email: {session.user.email}</p>
+          <p className="text-sm text-gray-600">Phone: {session.user.phone}</p>
+          <p className="text-sm text-gray-600">Role: {session.user.role}</p>
+          {session.user.role === "farmer-admin" && (
+            <p className="text-sm text-gray-600">
+              Farmer ID: {session.user.farmerId}
+            </p>
+          )}
+        </CardContent>
+      </Card>
     </main>
   );
 }

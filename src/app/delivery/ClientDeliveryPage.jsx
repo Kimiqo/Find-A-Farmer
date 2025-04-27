@@ -1,147 +1,152 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useCart } from "@/lib/CartContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useCart } from "@/lib/CartContext";
-import { useRouter } from "next/navigation";
-import { getDistance } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function ClientDeliveryPage({ farmers }) {
+export default function CheckoutPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const { cart, clearCart } = useCart();
   const [address, setAddress] = useState("");
-  const [userCoords, setUserCoords] = useState(null);
   const [error, setError] = useState("");
-  const router = useRouter();
+  const [success, setSuccess] = useState("");
 
-  // Get current location on mount
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const coords = { lat: position.coords.latitude, lng: position.coords.longitude };
-          setUserCoords(coords);
-          localStorage.setItem("userLocation", JSON.stringify({ name: "Current Location", coords }));
-          setError("");
-        },
-        () => {
-          setError("Geolocation failed. Using Accra center.");
-          setUserCoords({ lat: 5.6, lng: -0.2 }); // Accra fallback
-        }
-      );
-    } else {
-      setError("Geolocation not supported. Using Accra center.");
-      setUserCoords({ lat: 5.6, lng: -0.2 });
+    if (status === "unauthenticated") {
+      router.push("/auth/signin");
+      return;
     }
-  }, []);
+    if (session && session.user.role !== "buyer") {
+      router.push("/");
+      return;
+    }
+    console.log("Cart:", cart); // Debugging
+  }, [session, status, router, cart]);
 
-  async function handleOrder() {
-    if (!address || !userCoords) {
-      setError("Please enter a street address.");
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  async function handleOrder(e) {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!address.trim()) {
+      setError("Delivery address is required");
       return;
     }
 
-    try {
-      const order = {
-        timestamp: Date.now(),
-        items: cart,
-        address,
-        location: userCoords.lat === 5.6 && userCoords.lng === -0.2 ? "Accra Center (Fallback)" : "Current Location",
-        status: "pending",
-        deliveryTimes: cart.map((item) => {
-          const farmer = farmers.find((f) => f.id === item.farmerId);
-          if (!farmer) return { itemId: item.id, time: "Unknown" };
-          const distance = getDistance(
-            userCoords.lat,
-            userCoords.lng,
-            farmer.location.lat,
-            farmer.location.lng
-          );
-          const timeMin = Math.round((distance / 30) * 60 + 5);
-          return { itemId: item.id, farmerId: item.farmerId, time: `${timeMin} min` };
-        }),
-      };
+    if (!cart.length) {
+      setError("Cart is empty");
+      return;
+    }
 
+    const payload = {
+      buyerId: session?.user?.id,
+      buyerName: session?.user?.name,
+      buyerPhone: session?.user?.phone || "",
+      items: cart.map((item) => ({
+        farmerId: item.farmerId,
+        farmerName: item.farmerName || "Unknown",
+        productId: item.productId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+      total,
+      address,
+    };
+
+    console.log("Order payload:", payload); // Debugging
+
+    try {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(order),
+        body: JSON.stringify(payload),
       });
-
+      const data = await res.json();
       if (!res.ok) {
-        throw new Error("Failed to place order");
+        throw new Error(data.error || "Failed to place order");
       }
-
       clearCart();
-      router.push("/thank-you");
+      setSuccess("Order placed successfully!");
+      setTimeout(() => router.push("/thank-you"), 2000);
     } catch (err) {
-      setError("Failed to place order. Please try again.");
+      setError(err.message);
+      console.error("Order error:", err);
     }
   }
 
+  if (status === "loading") {
+    return <div className="p-4 text-gray-500">Loading...</div>;
+  }
+
+  if (!session || session.user.role !== "buyer") {
+    return null;
+  }
+
   return (
-    <main className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl md:text-4xl mb-6">Delivery Details</h1>
-      <div className="mb-6">
-        <h2 className="text-2xl mb-4">Cart</h2>
-        {cart.length ? (
-          <ul className="list-disc pl-5 mb-4">
-            {cart.map((item) => (
-              <li key={item.id} className="text-sm text-muted-foreground">
-                {item.name} - GHS {item.price.toFixed(2)} x {item.quantity}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-muted-foreground">Your cart is empty.</p>
-        )}
-      </div>
-      <div className="mb-6">
-        <h2 className="text-2xl mb-4">Delivery Address</h2>
-        <Input
-          placeholder="Street Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          className="mb-4 focus:ring-2 focus:ring-primary"
-          aria-label="Street address"
-        />
-        <p className="text-sm text-muted-foreground">
-          {userCoords?.lat === 5.6 && userCoords?.lng === -0.2
-            ? "Using Accra center (enable location services for precise delivery)."
-            : "Using your current location for delivery."}
-        </p>
-      </div>
-      {userCoords && (
-        <div className="mb-6">
-          <h2 className="text-2xl mb-4">Estimated Delivery Times</h2>
-          <ul className="list-disc pl-5">
-            {cart.map((item) => {
-              const farmer = farmers.find((f) => f.id === item.farmerId);
-              if (!farmer) return null;
-              const distance = getDistance(
-                userCoords.lat,
-                userCoords.lng,
-                farmer.location.lat,
-                farmer.location.lng
-              );
-              const timeMin = Math.round((distance / 30) * 60 + 5);
-              return (
-                <li key={item.id} className="text-sm text-muted-foreground">
-                  {item.name} from {farmer.name}: ~{timeMin} min
+    <main className="p-4 sm:p-6 md:p-8 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {success && <p className="text-green-500 mb-4">{success}</p>}
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Order Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {cart.length ? (
+              <ul className="space-y-2">
+                {cart.map((item) => (
+                  <li
+                    key={`${item.farmerId}-${item.productId}`}
+                    className="flex justify-between text-sm"
+                  >
+                    <span>
+                      {item.name} (x{item.quantity})
+                    </span>
+                    <span>GHS {(item.price * item.quantity).toFixed(2)}</span>
+                  </li>
+                ))}
+                <li className="flex justify-between font-bold mt-4">
+                  <span>Total</span>
+                  <span>GHS {total.toFixed(2)}</span>
                 </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
-      {error && <p className="text-destructive mb-6">{error}</p>}
-      <Button
-        className="bg-primary hover:bg-primary/90 text-primary-foreground"
-        onClick={handleOrder}
-        disabled={!cart.length || !address || !userCoords}
-      >
-        Place Order
-      </Button>
+              </ul>
+            ) : (
+              <p className="text-gray-500">Your cart is empty</p>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Delivery Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleOrder} className="space-y-4">
+              <Input
+                placeholder="Enter delivery address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+              />
+              <Button
+                type="submit"
+                disabled={!cart.length || !address.trim()}
+                className="w-full bg-[#2f855a] hover:bg-[#2f855a]/90 text-white"
+              >
+                Place Order
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </main>
   );
 }

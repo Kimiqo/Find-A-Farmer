@@ -28,6 +28,10 @@ export const authOptions = {
             throw new Error("No user found with this email");
           }
 
+          if (user.role === "farmer-admin" && user.status === "pending") {
+            throw new Error("Your farmer account is pending approval");
+          }
+
           const isValid = await bcrypt.compare(credentials.password, user.password);
           if (!isValid) {
             throw new Error("Invalid password");
@@ -39,8 +43,10 @@ export const authOptions = {
             name: user.name,
             role: user.role,
             farmerId: user.farmerId,
+            phone: user.phone, // Added to match previous session needs
           };
         } catch (error) {
+          console.error("Authorize error:", error.message, error.stack);
           throw new Error(error.message || "Authentication failed");
         } finally {
           await client.close();
@@ -54,6 +60,7 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.farmerId = token.farmerId;
+        session.user.phone = token.phone; // Added to match previous profile fix
       }
       return session;
     },
@@ -62,8 +69,19 @@ export const authOptions = {
         token.id = user.id;
         token.role = user.role;
         token.farmerId = user.farmerId;
+        token.phone = user.phone; // Added to match previous profile fix
       }
       return token;
+    },
+    async redirect({ user, url }) {
+      if (user) {
+        if (user.role === "farmer-admin") {
+          return "/farmer/dashboard";
+        } else if (user.role === "admin-admin") {
+          return "/admin/dashboard";
+        }
+      }
+      return "/"; // Default redirect
     },
   },
   pages: {
@@ -75,6 +93,7 @@ export const authOptions = {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  debug: true, // Enable debug logs for local testing
 };
 
 const handler = NextAuth(authOptions);
