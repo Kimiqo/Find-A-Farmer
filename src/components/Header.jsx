@@ -25,7 +25,7 @@ export default function Header() {
               className="h-10 w-10 rounded-full object-cover"
               onError={(e) => (e.target.src = "/images/placeholder.jpg")} // Fallback image
             />
-            <span className="text-xl font-bold">E-Farms</span>
+            <span className="text-xl font-bold">Accra Farms</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/" className="flex items-center gap-2 hover:text-[#f4a261] transition-colors">
