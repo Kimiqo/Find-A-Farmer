@@ -28,15 +28,23 @@ export default function Home() {
       {/* Hero Section with Farm Background */}
       <section
         className="relative bg-cover bg-center h-[400px] flex items-center justify-center"
-        style={{ backgroundImage: "url(/images/farm-hero.jpg)" }}
+        style={{ backgroundImage: "url(/images/farm-hero1.jpg)" }}
       >
         <div className="absolute inset-0 bg-black/30"></div>
+        <div className="relative z-10 flex flex-col items-center">
+        <p className="text-5xl md:text-5xl font-bold text-center text-white mb-4">
+          Fresh from Accra Farms
+        </p>
+        <p className="text-lg md:text-lg font-bold text-center text-white mb-8">
+          Connect with local farmers around you for the freshest produce.
+        </p>
         <Button
           onClick={handleShopNow}
-          className="relative z-10 bg-[#2f855a] hover:bg-[#2f855a]/90 text-white rounded-lg px-6 py-3 text-lg"
+          className="relative z-10 text-[#2f855a] hover:bg-[#2f855a]/90 hover:text-white bg-white rounded-lg px-8 py-5 text-lg"
         >
           Shop Now
         </Button>
+        </div>
       </section>
 
       {/* Benefits Section */}
@@ -80,7 +88,7 @@ export default function Home() {
                 className="object-cover"
               />
             </div>
-            <p className="mt-2 text-center font-semibold">Moo Fresh Milk</p>
+            <p className="mt-2 text-center font-semibold">Adom Farms</p>
           </div>
           <div className="flex flex-col items-center">
             <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
@@ -92,7 +100,7 @@ export default function Home() {
                 className="object-cover"
               />
             </div>
-            <p className="mt-2 text-center font-semibold">Green Basket Farms</p>
+            <p className="mt-2 text-center font-semibold">Nhyira Farms</p>
           </div>
           <div className="flex flex-col items-center">
             <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
@@ -104,7 +112,7 @@ export default function Home() {
                 className="object-cover"
               />
             </div>
-            <p className="mt-2 text-center font-semibold">Harvest Valley Farms</p>
+            <p className="mt-2 text-center font-semibold">Aseda Farms</p>
           </div>
           <div className="flex flex-col items-center">
             <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
@@ -116,10 +124,10 @@ export default function Home() {
                 className="object-cover"
               />
             </div>
-            <p className="mt-2 text-center font-semibold">Agross Produce</p>
+            <p className="mt-2 text-center font-semibold">Obaatanpa Farms</p>
           </div>
           <div className="flex flex-col items-center">
-            <div className="w-24 h-24 rounded-full bg-yellow-300 flex items-center justify-center overflow-hidden">
+            <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
               <Image
                 src="/images/farmer-5.jpg"
                 alt="Akoko Guy"
@@ -128,13 +136,13 @@ export default function Home() {
                 className="object-cover"
               />
             </div>
-            <p className="mt-2 text-center font-semibold">Akoko Guy</p>
+            <p className="mt-2 text-center font-semibold">Sankofa Farms</p>
           </div>
         </div>
         <div className="flex justify-center mt-8">
           <Button
             onClick={handleShopNow}
-            className="bg-[#2f855a] hover:bg-[#2f855a]/90 text-white rounded-lg px-6 py-3 text-lg"
+            className="bg-[#2f855a] hover:bg-[#2f855a]/90 text-white rounded-lg px-8 py-5 text-lg"
           >
             Shop Now
           </Button>

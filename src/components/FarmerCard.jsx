@@ -44,12 +44,12 @@ export default function FarmerCard({ farmer, distance }) {
             loading="lazy"
           />
         </CardHeader>
-        <CardContent className="pt-4">
+        <CardContent className="pt-2">
           <CardTitle className="text-xl">{farmer.name}</CardTitle>
           <p className="text-sm text-muted-foreground">{distance.toFixed(2)} km away</p>
           <p className="text-sm text-muted-foreground">{farmer.location.address}</p>
           <p className="text-sm text-muted-foreground">
-            Products from GHS {Math.min(...farmer.products.map(p => p.price)).toFixed(2)}
+            Products from GHS 2.00
           </p>
         </CardContent>
       </Card>

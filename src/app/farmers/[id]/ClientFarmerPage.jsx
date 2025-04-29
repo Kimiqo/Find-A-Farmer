@@ -72,7 +72,7 @@ export default function ClientFarmerPage({ farmer }) {
   const bannerSrc = farmerBanners[farmer.id] || "/images/farm-hero.jpg";
 
   return (
-    <main className="p-4 sm:p-6 md:p-8 max-w-4xl mx-auto bg-gradient-to-br from-[#f7fafc] to-[#e5e7eb] rounded-xl shadow-lg">
+    <main className="p-4 sm:p-6 md:p-8 w-full mx-auto bg-gradient-to-br from-[#f7fafc] to-[#e5e7eb] rounded-xl shadow-lg">
       <div className="relative w-full h-48 sm:h-64 md:h-80 mb-6 rounded-lg overflow-hidden shadow-md animate-fade-in">
         <Image
           src={bannerSrc}
